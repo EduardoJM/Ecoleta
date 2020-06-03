@@ -1,14 +1,15 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import { FiArrowLeft, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import axios from 'axios';
 import { LeafletMouseEvent } from 'leaflet';
 
+import MessageOverlay from '../../components/MessageOverlay';
+
 import api from '../../services/api';
 
 import './styles.css';
-
 import logo from '../../assets/logo.svg';
 
 interface Item {
@@ -26,6 +27,9 @@ interface IBGECityResponse {
 }
 
 const CreatePoint = () => {
+    const [hasError, setHasError] = useState(false);
+    const [hasCompleted, setHasCompleted] = useState(false);
+
     const [items, setItems] = useState<Item[]>([]);
     const [ufs, setUfs] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
@@ -42,8 +46,6 @@ const CreatePoint = () => {
     const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
 
-    const history = useHistory();
-
     useEffect(() => {
         navigator.geolocation.getCurrentPosition((position) => {
             const { latitude, longitude } = position.coords;
@@ -53,14 +55,20 @@ const CreatePoint = () => {
     
     useEffect(() => {
         api.get('items').then((response) => {
-            // TODO: check for error responses
+            if (response.status !== 200) {
+                setHasError(true);
+                return;
+            }
             setItems(response.data);
         });
     }, []);
 
     useEffect(() => {
         axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then((response) => {
-            // TODO: check for error responses
+            if (response.status !== 200) {
+                setHasError(true);
+                return;
+            }
             const ufInitials = response.data.map((uf) => uf.sigla);
             setUfs(ufInitials);
         });
@@ -71,6 +79,10 @@ const CreatePoint = () => {
             return;
         }
         axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then((response) => {
+            if (response.status !== 200) {
+                setHasError(true);
+                return;
+            }
             const citiesData = response.data.map((city) => city.nome);
             setCities(citiesData);
         });
@@ -127,17 +139,15 @@ const CreatePoint = () => {
             items
         };
 
-        await api.post('points', data);
-        // TODO: check the results from the API response
-        // for errors
-
-        alert("Inserido com sucesso");
-        // TODO: create the screens of the figma
-
-        history.push('/');
-
+        const response = await api.post('points', data);
+        
+        if (response.status !== 200) {
+            setHasError(true);
+            return;
+        }
+        setHasCompleted(true);
         // {This TODO is not about the web app}
-        // TODO: change the code in the filter function
+        // TODO: change the code in the filter function (problem detected using insomnia)
         // to better the querying
     }
 
@@ -266,6 +276,32 @@ const CreatePoint = () => {
                     Cadastrar ponto de coleta
                 </button>
             </form>
+
+            {hasError && (
+                <MessageOverlay
+                    colorClass="red"
+                    icon={<FiXCircle />}
+                    automaticRedirect
+                    redirectDelay={3000}
+                    redirectPath="/"
+                >
+                    <div>Erro no cadastro</div>
+                    <div className="medium">Esse pode ser um erro com a sua internet. Caso persista, entre em contato pelo e-mail:</div>
+                    <div className="small">eduardo_y05@outlook.com</div>
+                </MessageOverlay>
+            )}
+
+            {hasCompleted && (
+                <MessageOverlay
+                    colorClass="green"
+                    icon={<FiCheckCircle />}
+                    automaticRedirect
+                    redirectDelay={3000}
+                    redirectPath="/"
+                >
+                    <div>Cadastro Concluído!</div>
+                </MessageOverlay>
+            )}
         </div>
     )
 };

@@ -146,9 +146,6 @@ const CreatePoint = () => {
             return;
         }
         setHasCompleted(true);
-        // {This TODO is not about the web app}
-        // TODO: change the code in the filter function (problem detected using insomnia)
-        // to better the querying
     }
 
     return (

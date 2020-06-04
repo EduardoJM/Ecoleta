@@ -1,7 +1,7 @@
 /* TODO: better the mobile responsive
  */
 
-#page-home {
+ #page-home {
     height: 100vh;
 
     background: url('../../assets/home-background.svg') no-repeat 600px bottom;
@@ -43,7 +43,14 @@
     line-height: 38px;
 }
 
-#page-home .content main a {
+#page-home .content main a,
+#page-home .content main .fake-link {
+    color: var(--title-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#page-home .content main .button {
     width: 100%;
     max-width: 360px;
     height: 72px;
@@ -58,7 +65,7 @@
     margin-top: 40px;
 }
 
-#page-home .content main a span {
+#page-home .content main .button span {
     display: block;
     background: rgba(0, 0, 0, 0.08);
     width: 72px;
@@ -70,20 +77,21 @@
     transition: background-color 0.2s;
 }
 
-#page-home .content main a span svg {
+#page-home .content main .button span svg {
     color: #FFF;
     width: 20px;
     height: 20px;
 }
 
-#page-home .content main a strong {
+#page-home .content main .button strong {
     flex: 1;
     text-align: center;
     color: #FFF;
 }
 
-#page-home .content main a:hover {
+#page-home .content main .button:hover {
     background: #2FB86E;
+    cursor: pointer;
 }
 
 @media(max-width: 900px) {
@@ -107,4 +115,58 @@
     #page-home .content main p {
         font-size: 24px;
     }
+}
+
+.overlay-form {
+    margin-top: 50px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.overlay-form .field {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.overlay-form .field select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    flex: 1;
+    background: #F0F0F5;
+    border-radius: 8px;
+    border: 0;
+    padding: 16px 24px;
+    font-size: 16px;
+    color: #6C6C80;
+}
+
+.overlay-form .field .button {
+    width: 100%;
+    height: 58px;
+    background: var(--primary-color);
+    border-radius: 8px;
+    text-decoration: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.overlay-form .field .button strong {
+    flex: 1;
+    text-align: center;
+    color: #FFF;
+}
+
+.overlay-form .field .button:hover {
+    background: #2FB86E;
+    cursor: pointer;
 }

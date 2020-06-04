@@ -12,6 +12,7 @@ const Routes = () => {
             <Route component={CreatePoint} path="/create-point" />
         </BrowserRouter>
     );
+    //<Route component={HomeFindPoint} path="/find/:uf/:city" exact />
 }
 
 export default Routes;

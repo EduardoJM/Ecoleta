@@ -6,33 +6,17 @@ class PointsController {
         // cidades, uf, items (Query params)
         const { city, uf, items } = request.query;
         
-        let selectQuery = knex('points')
-            .join('point_items', 'points.id', '=', 'point_items.point_id');
+        const parsedItems = String(items)
+            .split(',')
+            .map(item => Number(item.trim()));
 
-        // if items exists, then use this
-        if (items) {
-            const parsedItems = String(items)
-                .split(',')
-                .map(item => Number(item.trim()));
-                
-            selectQuery = selectQuery
-                .whereIn('point_items.item_id', parsedItems)
-        }
-        // if city exists, then use this
-        if (city) {
-            selectQuery = selectQuery
-                .where('city', String(city))
-        }
-        // if uf exists, then use this
-        if (uf) {
-            selectQuery = selectQuery
-                .where('uf', String(uf));
-        }
-        selectQuery = selectQuery
+        const points = await knex('points')
+            .join('point_items', 'points.id', '=', 'point_items.point_id')
+            .whereIn('point_items.item_id', parsedItems)
+            .where('city', String(city))
+            .where('uf', String(uf))
             .distinct()
             .select('points.*');
-
-        let points = await selectQuery;
         
         return response.json(points);
     }

@@ -1,0 +1,99 @@
+#page-points {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+}
+
+#page-points .content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: 20px;
+}
+
+#page-points span {
+    margin-bottom: 10px;
+}
+
+#page-points .items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-start;
+}
+
+#page-points .items .item {
+    flex: 0 0 33.33%;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+#page-points .items .item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+#page-points .items .item h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+#page-points .items .item h3 {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#page-points .items .item p {
+    margin-bottom: 20px;
+}
+
+#page-points .items .item .fake-link {
+    color: var(--title-color);
+    cursor: pointer;
+}
+
+#page-points .items .item .contact {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#page-points .items .item .contact .button {
+    flex: 0 0 calc(50% - 20px);
+    height: 50px;
+    background: var(--primary-color);
+    border-radius: 8px;
+    text-decoration: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #FFF;
+}
+
+#page-points .items .item .contact .button svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+#page-points .items .item .contact .button:hover {
+    background: #2FB86E;
+    cursor: pointer;
+}
+
+#page-points .loading-indicator,
+#page-points .not-items-indicator {
+    min-height: 300px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}

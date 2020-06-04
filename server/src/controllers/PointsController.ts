@@ -1,22 +1,46 @@
-import { Request, Response } from 'express';
+import { Request, Response, query } from 'express';
 import knex from '../database/connection';
 
 class PointsController {
     async index(request: Request, response: Response) {
         // cidades, uf, items (Query params)
-        const { city, uf, items } = request.query;
+        const { city, uf, items, ignoreItems, returnItems, } = request.query;
         
-        const parsedItems = String(items)
-            .split(',')
-            .map(item => Number(item.trim()));
+        let query = knex('points')
+            .join('point_items', 'points.id', '=', 'point_items.point_id');
 
-        const points = await knex('points')
-            .join('point_items', 'points.id', '=', 'point_items.point_id')
-            .whereIn('point_items.item_id', parsedItems)
+        if (!ignoreItems) {
+            const parsedItems = String(items)
+                .split(',')
+                .map(item => Number(item.trim()));
+
+            query = query
+                .whereIn('point_items.item_id', parsedItems);
+        }
+
+        query = query
             .where('city', String(city))
             .where('uf', String(uf))
             .distinct()
             .select('points.*');
+        
+        let points = await query;
+
+        if (returnItems) {
+            const promisingData = Promise.all(points.map(async (point) => {
+                const fetchedItems = await knex('items')
+                    .join('point_items', 'items.id', '=', 'point_items.item_id')
+                    .where('point_items.point_id', point.id)
+                    .select('items.title');
+                const newPoint = {
+                    point,
+                    items: fetchedItems,
+                };
+                return newPoint;
+            }));
+            
+            points = await promisingData;
+        }
         
         return response.json(points);
     }

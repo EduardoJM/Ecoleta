@@ -29,8 +29,6 @@ const Home = () => {
 
     // TODO: fix the keyboard screen bug
 
-    // TODO: go back route in the API
-
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <ImageBackground

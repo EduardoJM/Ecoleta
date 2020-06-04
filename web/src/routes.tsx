@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, BrowserRouter } from 'react-router-dom';
 
 import Home from './pages/Home';
+import Points from './pages/Points';
 import CreatePoint from './pages/CreatePoint';
 
 const Routes = () => {
@@ -9,6 +10,7 @@ const Routes = () => {
     return (
         <BrowserRouter>
             <Route component={Home} path="/" exact />
+            <Route component={Points} path="/points/:uf/:city" />
             <Route component={CreatePoint} path="/create-point" />
         </BrowserRouter>
     );

@@ -179,3 +179,25 @@
     background: #E1FAEC;
     border: 2px solid #34CB79;
 }
+
+@media(max-width: 800px) {
+    #page-create-point form {
+        padding: 10px;
+    }
+
+    #page-create-point form .field-group {
+        flex-direction: column;
+    }
+
+    #page-create-point form .field-group .field + .field {
+        margin-left: 0;
+    }
+    
+    #page-create-point form .field-group input + input {
+        margin-left: 0;
+    }
+
+    .items-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

@@ -44,7 +44,7 @@ const CreatePoint = () => {
     const [items, setItems] = useState<Item[]>([]);
     const [ufs, setUfs] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
-    const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
+    const [initialPosition, setInitialPosition] = useState<[number, number]>([-16.3390798, -48.9303596]);
     
     const [formData, setFormData] = useState({
         name: '',

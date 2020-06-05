@@ -93,6 +93,7 @@
     width: 100%;
     padding: 10px;
     height: 300px;
+    margin-bottom: 30px;
 }
 
 #page-points .items .item-map .leaflet-container{
@@ -111,6 +112,7 @@
 #page-points .items .close-map span {
     display: flex;
     align-items: center;
+    cursor: pointer;
 }
 
 #page-points .items .close-map span svg {

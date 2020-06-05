@@ -88,7 +88,7 @@ const Points = () => {
                                             <a href={`mailto:${point.point.email}`} className="button">
                                                 <FiMail /> E-mail
                                             </a>
-                                            <a href={`https://wa.me/${point.point.whatsapp}`} className="button">
+                                            <a href={`https://wa.me/55${point.point.whatsapp}`} className="button">
                                                 <FaWhatsapp /> Whatsapp
                                             </a>
                                         </div>

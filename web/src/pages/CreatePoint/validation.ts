@@ -3,7 +3,7 @@ import * as yup from 'yup';
 const schema = yup.object().shape({
     name: yup.string().required(),
     email: yup.string().email(),
-    whatsapp: yup.string().required().length(11),
+    whatsapp: yup.string().required().length(11).matches(/^[0-9]+$/, 'apenas digitos'),
     latitude: yup.number().required(),
     longitude: yup.number().required(),
     city: yup.string().required(),

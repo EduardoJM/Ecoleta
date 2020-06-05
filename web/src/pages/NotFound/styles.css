@@ -1,0 +1,29 @@
+#page-notfound {
+    height: 100vh;
+
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    background: url('../../assets/home-background.svg') no-repeat center bottom;
+    background-size: auto 300px;
+}
+
+#page-notfound .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#page-notfound .content h1,
+#page-notfound .content h2,
+#page-notfound .content h3,
+#page-notfound .content h4,
+#page-notfound .content h5,
+#page-notfound .content h6 {
+    text-align: center;
+}
+#page-notfound .content h1 {
+    margin-bottom: 20px;
+}

@@ -1,20 +1,22 @@
 import React from 'react';
-import { Route, BrowserRouter } from 'react-router-dom';
+import { Route, BrowserRouter, Switch } from 'react-router-dom';
 
 import Home from './pages/Home';
 import Points from './pages/Points';
 import CreatePoint from './pages/CreatePoint';
+import NotFound from './pages/NotFound';
 
 const Routes = () => {
-    // TODO: insert an 404 page
     return (
         <BrowserRouter>
-            <Route component={Home} path="/" exact />
-            <Route component={Points} path="/points/:uf/:city" />
-            <Route component={CreatePoint} path="/create-point" />
+            <Switch>
+                <Route component={Home} path="/" exact />
+                <Route component={Points} path="/points/:uf/:city" />
+                <Route component={CreatePoint} path="/create-point" />
+                <Route component={NotFound} />
+            </Switch>
         </BrowserRouter>
     );
-    //<Route component={HomeFindPoint} path="/find/:uf/:city" exact />
 }
 
 export default Routes;

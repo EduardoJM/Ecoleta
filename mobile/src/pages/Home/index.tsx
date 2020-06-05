@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 import {
     StyleSheet,
@@ -6,28 +6,58 @@ import {
     ImageBackground,
     Image,
     Text,
-    TextInput,
     KeyboardAvoidingView,
     Platform,
 } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import RNPickerSelect from 'react-native-picker-select';
+import axios from 'axios';
+
+interface IBGEUFResponse {
+    sigla: string;
+}
+
+interface IBGECityResponse {
+    nome: string;
+}
 
 const Home = () => {
     const navigation = useNavigation();
-    const [uf, setUf] = useState('');
-    const [city, setCity] = useState('');
+    const [ufs, setUfs] = useState<string[]>([]);
+    const [cities, setCities] = useState<string[]>([]);
+    const [selectedUf, setSelectedUf] = useState('0');
+    const [selectedCity, setSelectedCity] = useState('0');
+
+    useEffect(() => {
+        axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then((response) => {
+            if (response.status !== 200) {
+                return;
+            }
+            const ufInitials = response.data.map((uf) => uf.sigla);
+            setUfs(ufInitials);
+        });
+    }, []);
+
+    useEffect(() => {
+        if (selectedUf === '0') {
+            return;
+        }
+        axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then((response) => {
+            if (response.status !== 200) {
+                return;
+            }
+            const citiesData = response.data.map((city) => city.nome);
+            setCities(citiesData);
+        });
+    }, [selectedUf]);
 
     function handleNavigateToPoints() {
         navigation.navigate('Points', {
-            uf,
-            city,
+            uf: selectedUf,
+            city: selectedCity,
         });
     }
-
-    // TODO: integrate this with IBGE api
-
-    // TODO: fix the keyboard screen bug
 
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -45,22 +75,32 @@ const Home = () => {
                 </View>
 
                 <View style={styles.footer}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Digite a UF"
-                        maxLength={2}
-                        autoCapitalize="characters"
-                        autoCorrect={false}
-                        value={uf}
-                        onChangeText={setUf}
+                    <RNPickerSelect
+                        value={selectedUf}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => setSelectedUf(value)}
+                        useNativeAndroidPickerStyle={false}
+                        items={ufs.map((uf) => {
+                            return {
+                                label: uf,
+                                value: uf,
+                            };
+                        })}
+                        Icon={() => <Feather style={styles.selectIcon} name="chevron-down" size={24} color="#6C6C80" />}
                     />
 
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Digite a cidade"
-                        autoCorrect={false}
-                        value={city}
-                        onChangeText={setCity}
+                    <RNPickerSelect
+                        value={selectedCity}
+                        style={pickerSelectStyles}
+                        onValueChange={(value) => setSelectedCity(value)}
+                        useNativeAndroidPickerStyle={false}
+                        items={cities.map((city) => {
+                            return {
+                                label: city,
+                                value: city,
+                            };
+                        })}
+                        Icon={() => <Feather style={styles.selectIcon} name="chevron-down" size={24} color="#6C6C80" />}
                     />
 
                     <RectButton style={styles.button} onPress={handleNavigateToPoints}>
@@ -76,6 +116,31 @@ const Home = () => {
         </KeyboardAvoidingView>
     );
 };
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        height: 60,
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        marginBottom: 8,
+        paddingHorizontal: 24,
+        fontSize: 16,
+        paddingVertical: 8,
+        color: '#6C6C80',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+    inputAndroid: {
+        height: 60,
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        marginBottom: 8,
+        paddingHorizontal: 24,
+        fontSize: 16,
+        paddingVertical: 8,
+        color: '#6C6C80',
+        paddingRight: 30, // to ensure the text is never behind the icon
+    },
+})
 
 const styles = StyleSheet.create({
     container: {
@@ -109,15 +174,6 @@ const styles = StyleSheet.create({
   
     select: {},
 
-    input: {
-        height: 60,
-        backgroundColor: '#FFF',
-        borderRadius: 10,
-        marginBottom: 8,
-        paddingHorizontal: 24,
-        fontSize: 16,
-    },
-  
     button: {
         backgroundColor: '#34CB79',
         height: 60,
@@ -136,6 +192,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.1)',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+
+    selectIcon: {
+        top: 18,
+        right: 6
     },
   
     buttonText: {

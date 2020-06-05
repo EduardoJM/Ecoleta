@@ -53,7 +53,15 @@ const Detail = () => {
     }
 
     function handleWhatsapp() {
-        Linking.openURL(`whatsapp://send?phone=${data.point.whatsapp}&text=Tenho interesse na coleta de resíduos`)
+        // added the +55 because in the backend and in the web frontend
+        // the number format is used as xxaaaaannnn,
+        // xx -> DDD
+        // aaaaa -> first five digits (original four and the added 9)
+        // nnnn -> last four digits
+        // and this linking whatsapp:// use the format
+        // +region number
+        // +region = 55 for brazil
+        Linking.openURL(`whatsapp://send?phone=+55${data.point.whatsapp}&text=Tenho interesse em informações sobre coleta de resíduos`);
     }
 
     if (!data.point) {

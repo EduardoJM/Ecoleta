@@ -109,7 +109,7 @@ const Points = () => {
                 <Text style={styles.description}>Encontre no mapa um ponto de coleta.</Text>
 
                 <View style={styles.mapContainer}>
-                    { /* TODO: inserir component de loading... */ initialPosition[0] !== 0 && (
+                    {initialPosition[0] !== 0 ? (
                         <MapView
                             style={styles.map}
                             initialRegion={{
@@ -136,6 +136,10 @@ const Points = () => {
                                 </Marker>
                             ))}
                         </MapView>
+                    ) : (
+                        <View style={styles.loadingView}>
+                            <Text style={styles.loadingText}>Carregando...</Text>
+                        </View>
                     )}
                 </View>
             </View>
@@ -259,6 +263,19 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto_400Regular',
         textAlign: 'center',
         fontSize: 13,
+    },
+
+    loadingView: {
+        flex: 1,
+        backgroundColor: '#FFF',
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+
+    loadingText: {
+        color: '#6C6C80',
+        fontFamily: 'Roboto_400Regular'
     },
 });
 

@@ -88,6 +88,17 @@
     cursor: pointer;
 }
 
+#page-points .items .item-map {
+    width: 100%;
+    height: 300px;
+}
+
+#page-points .items .item-map .leaflet-container{
+    border-radius: 8px;
+    width: 100%;
+    height: 300px;
+}
+
 #page-points .loading-indicator,
 #page-points .not-items-indicator {
     min-height: 300px;

@@ -1,17 +1,18 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
-import { Link } from 'react-router-dom';
-import { FiArrowLeft, FiCheckCircle, FiXCircle } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
+import { FiCheckCircle, FiX, FiXCircle } from 'react-icons/fi';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import axios from 'axios';
 import { LeafletMouseEvent } from 'leaflet';
 
+import validateCreatePointData from './validation';
+
+import Header from '../../components/Header';
 import Dropzone from '../../components/Dropzone';
-import MessageOverlay from '../../components/MessageOverlay';
 
 import api from '../../services/api';
 
 import './styles.css';
-import logo from '../../assets/logo.svg';
 
 interface Item {
     id: number;
@@ -27,8 +28,17 @@ interface IBGECityResponse {
     nome: string;
 }
 
+interface ErrorData {
+    error: string | boolean;
+    message: string;
+}
+
 const CreatePoint = () => {
-    const [hasError, setHasError] = useState(false);
+    const [errorData, setErrorData] = useState<ErrorData>({
+        error: false,
+        message: '',
+    });
+    const [fileError, setFileError] = useState('');
     const [hasCompleted, setHasCompleted] = useState(false);
 
     const [items, setItems] = useState<Item[]>([]);
@@ -41,6 +51,8 @@ const CreatePoint = () => {
         email: '',
         whatsapp: '',
     });
+
+    const history = useHistory();
 
     const [selectedUf, setSelectedUf] = useState('0');
     const [selectedCity, setSelectedCity] = useState('0');
@@ -58,7 +70,10 @@ const CreatePoint = () => {
     useEffect(() => {
         api.get('items').then((response) => {
             if (response.status !== 200) {
-                setHasError(true);
+                setErrorData({
+                    error: true,
+                    message: 'Não foi possível carregar os itens.',
+                });
                 return;
             }
             setItems(response.data);
@@ -68,7 +83,10 @@ const CreatePoint = () => {
     useEffect(() => {
         axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then((response) => {
             if (response.status !== 200) {
-                setHasError(true);
+                setErrorData({
+                    error: true,
+                    message: 'Não foi possível carregar os dados do IBGE',
+                });
                 return;
             }
             const ufInitials = response.data.map((uf) => uf.sigla);
@@ -82,7 +100,10 @@ const CreatePoint = () => {
         }
         axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then((response) => {
             if (response.status !== 200) {
-                setHasError(true);
+                setErrorData({
+                    error: true,
+                    message: 'Não foi possível carregar os dados do IBGE',
+                });
                 return;
             }
             const citiesData = response.data.map((city) => city.nome);
@@ -122,6 +143,16 @@ const CreatePoint = () => {
         }
     }
 
+    function handleImageSelect(file: File) {
+        if (file.size >= 1048576) {
+            setFileError("Tamanho do arquivo deve ser no máximo de 1mb");
+            return false;
+        }
+        setSelectedFile(file);
+        setFileError('');
+        return true;
+    }
+
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
         const { name, email, whatsapp } = formData;
@@ -130,10 +161,33 @@ const CreatePoint = () => {
         const [latitude, longitude] = selectedPosition;
         const items = selectedItems;
         
-        // TODO: Validate with yup
+        if (!selectedFile) {
+            setErrorData({
+                error: true,
+                message: 'Você precisa enviar uma imagem do seu ponto de coleta.',
+            });
+            return;
+        }
+        const validationResult = await validateCreatePointData({
+            name,
+            email,
+            whatsapp,
+            uf,
+            city,
+            latitude,
+            longitude,
+            items,
+        });
+        
+        if (!validationResult) {
+            setErrorData({
+                error: true,
+                message: 'Há uma inconsistência com os seus dados.'
+            });
+            return;
+        }
 
         const data = new FormData();
-
         data.append('name', name);
         data.append('email', email);
         data.append('whatsapp', whatsapp);
@@ -142,37 +196,33 @@ const CreatePoint = () => {
         data.append('latitude', String(latitude));
         data.append('longitude', String(longitude));
         data.append('items', items.join(','));
-        
-        if (selectedFile) {
-            // TODO: validate this.
-            // if no image => error
-            data.append('image', selectedFile);
-        }
+        data.append('image', selectedFile);
 
         const response = await api.post('points', data);
-        
         if (response.status !== 200) {
-            setHasError(true);
+            setErrorData({
+                error: true,
+                message: 'Erro ao cadastrar o ponto de coleta.',
+            });
             return;
         }
         setHasCompleted(true);
+        setTimeout(() => {
+            history.push('/');
+        }, 3000);
     }
 
     return (
         <div id="page-create-point">
-            <header>
-                <img src={logo} alt="Ecoleta"/>
-
-                <Link to="/">
-                    <FiArrowLeft />
-                    Voltar para home
-                </Link>
-            </header>
+            <Header />
 
             <form onSubmit={handleSubmit}>
                 <h1>Cadastro do<br/> ponto de coleta</h1>
 
-                <Dropzone onFileUploaded={setSelectedFile} />
+                <Dropzone onFileUploaded={handleImageSelect} />
+                {fileError && (
+                    <p>{fileError}</p>
+                )}
                 
                 <fieldset>
                     <legend>
@@ -286,30 +336,35 @@ const CreatePoint = () => {
                 </button>
             </form>
 
-            {hasError && (
-                <MessageOverlay
-                    colorClass="red"
-                    icon={<FiXCircle />}
-                    automaticRedirect
-                    redirectDelay={3000}
-                    redirectPath="/"
-                >
-                    <div>Erro no cadastro</div>
-                    <div className="medium">Esse pode ser um erro com a sua internet. Caso persista, entre em contato pelo e-mail:</div>
-                    <div className="small">eduardo_y05@outlook.com</div>
-                </MessageOverlay>
+            {errorData.error && (
+                <div className="overlay">
+                    <div
+                        className="close-button"
+                        onClick={() => setErrorData({ error: false, message: '' })}
+                    >
+                        <FiX />
+                    </div>
+                    <div className="icon-area red-icon">
+                        <FiXCircle />
+                    </div>
+                    <div className="text-area">
+                        <div>Erro no cadastro</div>
+                        <div className="medium">{errorData.message}</div>
+                        <div className="medium">Esse pode ser um erro com a sua internet. Caso persista, entre em contato pelo e-mail:</div>
+                        <div className="small">eduardo_y05@outlook.com</div>
+                    </div>
+                </div>
             )}
 
             {hasCompleted && (
-                <MessageOverlay
-                    colorClass="green"
-                    icon={<FiCheckCircle />}
-                    automaticRedirect
-                    redirectDelay={3000}
-                    redirectPath="/"
-                >
-                    <div>Cadastro Concluído!</div>
-                </MessageOverlay>
+                <div className="overlay">
+                    <div className={`icon-area green-icon`}>
+                        <FiCheckCircle />
+                    </div>
+                    <div className="text-area">
+                        <div>Cadastro Concluído!</div>
+                    </div>
+                </div>
             )}
         </div>
     )

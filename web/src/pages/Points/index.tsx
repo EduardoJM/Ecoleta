@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
 import { FiMail } from 'react-icons/fi'
+import { Map, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
 
 import api from '../../services/api';
 
@@ -36,6 +37,7 @@ const Points = () => {
     const { uf, city } = useParams<RouteParams>();
     const [points, setPoints] = useState<Point[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [viewingMap, setViewingMap] = useState(-1);
 
     useEffect(() => {
         api.get('points', {
@@ -49,13 +51,10 @@ const Points = () => {
             if (response.status !== 200) {
                 return;
             }
-            console.log(response.data);
             setPoints(response.data);
             setIsLoading(false);
         });
     }, [uf, city]);
-
-    // TODO: create the show in the map screen
 
     return (
         <div id="page-points">
@@ -78,21 +77,40 @@ const Points = () => {
                         </div>
                     ) : (
                         <div className="items">
-                            {points.map((point) => (
-                                <div className="item" key={point.point.id}>
-                                    <img alt="title" src={point.point.image_url} />
-                                    <h2>{point.point.name}</h2>
-                                    <h3>{point.items.map((item) => item.title).join(', ')}</h3>
-                                    <p>{point.point.city}, {point.point.uf} (<span className="fake-link">Ver no Mapa</span>)</p>
-                                    <div className="contact">
-                                        <a href={`mailto:${point.point.email}`} className="button">
-                                            <FiMail /> E-mail
-                                        </a>
-                                        <a href={`https://wa.me/${point.point.whatsapp}`} className="button">
-                                            <FaWhatsapp /> Whatsapp
-                                        </a>
+                            {points.map((point, index) => (
+                                <React.Fragment key={point.point.id}>
+                                    <div className="item">
+                                        <img alt="title" src={point.point.image_url} />
+                                        <h2>{point.point.name}</h2>
+                                        <h3>{point.items.map((item) => item.title).join(', ')}</h3>
+                                        <p>{point.point.city}, {point.point.uf} (<span onClick={() => setViewingMap(index)} className="fake-link">Ver no Mapa</span>)</p>
+                                        <div className="contact">
+                                            <a href={`mailto:${point.point.email}`} className="button">
+                                                <FiMail /> E-mail
+                                            </a>
+                                            <a href={`https://wa.me/${point.point.whatsapp}`} className="button">
+                                                <FaWhatsapp /> Whatsapp
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
+                                    {index === viewingMap && (
+                                        <div className="item-map">
+                                            <Map
+                                                center={[point.point.latitude, point.point.longitude]}
+                                                zoom={15}
+                                            >
+                                                <TileLayer
+                                                    attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                                />
+                                                <Marker position={[point.point.latitude, point.point.longitude]}>
+                                                    <Popup>{point.point.name}</Popup>
+                                                    <Tooltip>{point.point.name}</Tooltip>
+                                                </Marker>
+                                            </Map>
+                                        </div>
+                                    )}
+                                </React.Fragment>
                             ))}
                         </div>
                     )}

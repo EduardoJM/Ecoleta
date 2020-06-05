@@ -24,10 +24,17 @@ class PointsController {
             .distinct()
             .select('points.*');
         
-        let points = await query;
+        const points = await query;
+
+        let serializedPoints = points.map((point) => {
+            return {
+                ...point,
+                image_url: `http://10.0.0.103:3333/uploads/images/${point.image}`,
+            };
+        });
 
         if (returnItems) {
-            const promisingData = Promise.all(points.map(async (point) => {
+            const promisingData = Promise.all(serializedPoints.map(async (point) => {
                 const fetchedItems = await knex('items')
                     .join('point_items', 'items.id', '=', 'point_items.item_id')
                     .where('point_items.point_id', point.id)
@@ -39,10 +46,10 @@ class PointsController {
                 return newPoint;
             }));
             
-            points = await promisingData;
+            serializedPoints = await promisingData;
         }
         
-        return response.json(points);
+        return response.json(serializedPoints);
     }
 
     async show(request: Request, response: Response) {
@@ -56,12 +63,17 @@ class PointsController {
             });
         }
 
+        const serializedPoint = {
+            ...point,
+            image_url: `http://10.0.0.103:3333/uploads/images/${point.image}`,
+        };
+
         const items = await knex('items')
             .join('point_items', 'items.id', '=', 'point_items.item_id')
             .where('point_items.point_id', id)
             .select('items.title');
         
-        return response.json({ point, items });
+        return response.json({ point: serializedPoint, items });
     }
 
     async create(request: Request, response: Response) {
@@ -79,7 +91,7 @@ class PointsController {
         const trx = await knex.transaction();
 
         const point = {
-            image: 'https://images.unsplash.com/photo-1518792528501-352f829886dc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60',
+            image: request.file.filename,
             name,
             email,
             whatsapp,
@@ -92,12 +104,15 @@ class PointsController {
         const insertedIds = await trx('points').insert(point);
         const pointId = insertedIds[0];
     
-        const pointItems = items.map((itemId: number) => {
-            return {
-                item_id: itemId,
-                point_id: pointId,
-            }
-        });
+        const pointItems = items
+            .split(',')
+            .map((item: string) => Number(item.trim()))
+            .map((itemId: number) => {
+                return {
+                    item_id: itemId,
+                    point_id: pointId,
+                }
+            });
     
         await trx('point_items').insert(pointItems);
 

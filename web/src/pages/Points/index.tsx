@@ -18,6 +18,7 @@ interface Point {
     point: {
         id: number;
         image: string;
+        image_url: string;
         name: string;
         uf: string;
         city: string;
@@ -48,6 +49,7 @@ const Points = () => {
             if (response.status !== 200) {
                 return;
             }
+            console.log(response.data);
             setPoints(response.data);
             setIsLoading(false);
         });
@@ -78,7 +80,7 @@ const Points = () => {
                         <div className="items">
                             {points.map((point) => (
                                 <div className="item" key={point.point.id}>
-                                    <img alt="title" src={point.point.image} />
+                                    <img alt="title" src={point.point.image_url} />
                                     <h2>{point.point.name}</h2>
                                     <h3>{point.items.map((item) => item.title).join(', ')}</h3>
                                     <p>{point.point.city}, {point.point.uf} (<span className="fake-link">Ver no Mapa</span>)</p>

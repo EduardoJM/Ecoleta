@@ -19,3 +19,23 @@ header a svg {
     margin-right: 16px;
     color: var(--primary-color);
 }
+
+@media(max-width: 1210px) {
+    header {
+        padding: 0 8%;
+    }
+}
+
+@media(max-width: 600px) {
+    header {
+        flex-wrap: wrap;
+    }
+
+    header > * {
+        width: 100%;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

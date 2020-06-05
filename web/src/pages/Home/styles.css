@@ -1,7 +1,4 @@
-/* TODO: better the mobile responsive
- */
-
- #page-home {
+#page-home {
     height: 100vh;
 
     background: url('../../assets/home-background.svg') no-repeat 600px bottom;
@@ -117,6 +114,36 @@
     }
 }
 
+@media(max-width: 900px) {
+    #page-home {
+        background-position: center 120px;
+    }
+    #page-home main {
+        margin-top: 580px;
+        padding-bottom: 50px;
+    }
+}
+
+@media(min-width: 900px) and (max-width: 1200px) {
+    #page-home {
+        background-position: 140% center;
+        background-size: 70%;
+    }
+}
+
+@media(min-width: 1200px) and (max-width: 1600px) {
+    #page-home {
+        background-position: 120% bottom;
+    }
+}
+
+@media(min-width: 1600px) {
+    #page-home {
+        background-position: 100% bottom;
+    }
+}
+
+/* overlay form*/
 .overlay-form {
     margin-top: 50px;
     width: 400px;

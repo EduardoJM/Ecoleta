@@ -91,13 +91,30 @@
 
 #page-points .items .item-map {
     width: 100%;
+    padding: 10px;
     height: 300px;
 }
 
 #page-points .items .item-map .leaflet-container{
     border-radius: 8px;
     width: 100%;
-    height: 300px;
+    height: 100%;
+}
+
+#page-points .items .close-map {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#page-points .items .close-map span {
+    display: flex;
+    align-items: center;
+}
+
+#page-points .items .close-map span svg {
+    margin-left: 5px;
 }
 
 #page-points .loading-indicator,

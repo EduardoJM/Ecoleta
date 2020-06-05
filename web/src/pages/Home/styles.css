@@ -116,10 +116,11 @@
 
 @media(max-width: 900px) {
     #page-home {
-        background-position: center 120px;
+        background-position: calc(50% - 30px) 160px;
+        background-size: auto 300px;
     }
     #page-home main {
-        margin-top: 580px;
+        margin-top: 350px;
         padding-bottom: 50px;
     }
 }

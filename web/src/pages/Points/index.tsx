@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
-import { FiMail } from 'react-icons/fi'
+import { FiMail, FiX } from 'react-icons/fi'
 import { Map, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
 
 import api from '../../services/api';
@@ -95,6 +95,12 @@ const Points = () => {
                                     </div>
                                     {index === viewingMap && (
                                         <div className="item-map">
+                                            <div className="close-map">
+                                                <span onClick={() => setViewingMap(-1)}>
+                                                    Fechar Mapa
+                                                    <FiX />
+                                                </span>
+                                            </div>
                                             <Map
                                                 center={[point.point.latitude, point.point.longitude]}
                                                 zoom={15}

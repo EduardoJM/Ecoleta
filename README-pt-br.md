@@ -44,14 +44,14 @@ Esse é o projeto **Ecoleta** criado no evento **Next Level Week** da **Rocketse
         - [Front-End](#computer-Front-End)
         - [Mobile](#iphone-Mobile)
     - [Como rodar](#floppy_disk-Como-rodar)
-        - [1 - Clonar o repositório](#1-Clonar-o-repositório)
-        - [2 - Instalar as dependências e rodar o back-end](#2-Instalar-as-dependências-e-rodar-o-back-end)
-        - [3 - Mude o IP do localhost](#3-Mude-o-IP-do-localhost)
+        - [1 - Clonar o repositório](#1---Clonar-o-repositório)
+        - [2 - Instalar as dependências e rodar o back-end](#2---Instalar-as-dependências-e-rodar-o-back-end)
+        - [3 - Mude o IP do localhost](#3---Mude-o-IP-do-localhost)
             - [Back-end](#Back-end)
             - [Front-end](#Front-end)
             - [Mobile](#Mobile)
-        - [4 - Instalar dependências e rodar o front-end em ReactJS](#4-Instalar-dependências-e-rodar-o-front-end-em-ReactJS)
-        - [5 - Instalar as dependências e rodar o aplicativo mobile](#5-Instalar-as-dependências-e-rodar-o-aplicativo-mobile)
+        - [4 - Instalar dependências e rodar o front-end em ReactJS](#4---Instalar-dependências-e-rodar-o-front-end-em-ReactJS)
+        - [5 - Instalar as dependências e rodar o aplicativo mobile](#5---Instalar-as-dependências-e-rodar-o-aplicativo-mobile)
     - [Futuro](#flags-Futuro)
         - [Enviar informações de erros para o front-end](#Enviar-informações-de-erros-para-o-front-end)
         - [Adicionar suporte para autenticação e editar informações](#Adicionar-suporte-para-autenticação-e-editar-informações)
@@ -89,7 +89,7 @@ Algumas funcionalidades da aplicação não foram desenvolvidas durante o **Next
 
 - Alterado a funcionalidade de procurar pontos, deixando os items opcionais (Usado no front-end para criar a busca por estado e cidade na versão web).
 
-- Criado um middleware para capturar os erros (Será usado no futuro para enviar informações sobre os erros do back-end para o front-end {Veja [isso na seção Futuro](#Send-errors-informations-from-back-end-for-front-end)}).
+- Criado um middleware para capturar os erros (Será usado no futuro para enviar informações sobre os erros do back-end para o front-end {Veja [isso na seção Futuro](#Enviar-informações-de-erros-para-o-front-end)}).
 
 - Movido a parte de validação para um middleware para deixar o arquivo `routes.ts` mais limpo.
 

@@ -12,7 +12,7 @@ function errorHandler (
     response: Response,
     next: NextFunction
 ) {
-    return response.status(500)
+    return response.status(400)
         .json({
             error: true,
             information: {

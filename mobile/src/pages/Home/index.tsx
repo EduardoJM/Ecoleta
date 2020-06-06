@@ -26,8 +26,8 @@ const Home = () => {
     const navigation = useNavigation();
     const [ufs, setUfs] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
-    const [selectedUf, setSelectedUf] = useState('0');
-    const [selectedCity, setSelectedCity] = useState('0');
+    const [selectedUf, setSelectedUf] = useState(null);
+    const [selectedCity, setSelectedCity] = useState(null);
 
     useEffect(() => {
         axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then((response) => {
@@ -53,6 +53,9 @@ const Home = () => {
     }, [selectedUf]);
 
     function handleNavigateToPoints() {
+        if (!selectedUf || !selectedCity) {
+            return;
+        }
         navigation.navigate('Points', {
             uf: selectedUf,
             city: selectedCity,
@@ -80,6 +83,7 @@ const Home = () => {
                         style={pickerSelectStyles}
                         onValueChange={(value) => setSelectedUf(value)}
                         useNativeAndroidPickerStyle={false}
+                        placeholder={{ value: null, label: "Selecione um estado" }}
                         items={ufs.map((uf) => {
                             return {
                                 label: uf,
@@ -94,6 +98,7 @@ const Home = () => {
                         style={pickerSelectStyles}
                         onValueChange={(value) => setSelectedCity(value)}
                         useNativeAndroidPickerStyle={false}
+                        placeholder={{ value: null, label: "Selecione uma cidade" }}
                         items={cities.map((city) => {
                             return {
                                 label: city,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Feather, FontAwesome } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StyleSheet, View, Linking, Image, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StyleSheet, Platform, View, Linking, Image, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import Constants from 'expo-constants';
 import { RectButton } from 'react-native-gesture-handler';
 import * as MailComposer from 'expo-mail-composer';
@@ -20,6 +20,8 @@ interface Data {
         whatsapp: string;
         city: string;
         uf: string;
+        latitude: number;
+        longitude: number;
     };
     items: {
         title: string;
@@ -64,6 +66,18 @@ const Detail = () => {
         Linking.openURL(`whatsapp://send?phone=+55${data.point.whatsapp}&text=Tenho interesse em informações sobre coleta de resíduos`);
     }
 
+    function handleOpenLocalization() {
+        // ref: https://stackoverflow.com/questions/43214062/open-maps-google-maps-in-react-native
+        const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+        const latLng = `${data.point.latitude},${data.point.longitude}`;
+        const label = data.point.name;
+        const url = Platform.select({
+            ios: `${scheme}${label}@${latLng}`,
+            android: `${scheme}${latLng}(${label})`
+        });
+        Linking.openURL(String(url));
+    }
+
     if (!data.point) {
         return null;
     }
@@ -88,6 +102,10 @@ const Detail = () => {
                 <View style={styles.address}>
                     <Text style={styles.addressTitle}>Endereço</Text>
                     <Text style={styles.addressContent}>{data.point.city}, {data.point.uf}</Text>
+                    <TouchableOpacity onPress={handleOpenLocalization} activeOpacity={0.6} style={styles.localizationButton}>
+                        <Text style={styles.localizationButtonText}>Abrir Localização</Text>
+                        <Feather name="external-link" size={18} color="#6C6C80" />
+                    </TouchableOpacity>
                 </View>
             </View>
             <View style={styles.footer}>
@@ -176,6 +194,18 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
         fontFamily: 'Roboto_500Medium',
+    },
+
+    localizationButton: {
+        marginTop: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    localizationButtonText: {
+        color: '#6C6C80',
+        fontFamily: 'Roboto_400Regular',
+        marginRight: 5
     },
 });
 

@@ -1,3 +1,5 @@
+[Ver o Leia-Me em Português](README-pt-br.md)
+
 # :recycle: Ecoleta
 
 This is the **Ecoleta** project, created along the **Next Level Week** event made by **Rocketseat**. First, I need to add some thanks to **Rocketseat** and to **Diego** (from the **Rocketseat**) for this awesome event.
@@ -8,9 +10,12 @@ This is the **Ecoleta** project, created along the **Next Level Week** event mad
 
 <h2 align="center">
     <div style="display:flex">
-        <img src="images/preview/mobile_front.jpeg" width="300px">
-        <img src="images/preview/mobile_points.jpeg" style="margin-left:3px"  width="300px">
-        <img src="images/preview/mobile_detail.jpeg" style="margin-left: 3px;" width="300px">
+        <img src="images/preview/mobile_front.jpeg" width="350px">
+        <img src="images/preview/mobile_points.jpeg" style="margin-left:3px"  width="350px">
+    </div>
+    <div style="display:flex">
+        <img src="images/preview/mobile_points_one.png" style="margin-top: 3px;" width="350px">
+        <img src="images/preview/mobile_detail.jpeg" style="margin-left: 3px; margin-top: 3px;" width="350px">
     </div>
 </h2>
 <h2 align="center">
@@ -19,15 +24,13 @@ This is the **Ecoleta** project, created along the **Next Level Week** event mad
 
 ## :information_source: About
 
-This is the **Ecoleta** project created in the **Next Level Week** event made by **Rocketseat**. This repository contains four projects:
+This is the **Ecoleta** project created in the **Next Level Week** event made by **Rocketseat**. This repository contains three projects:
 
 1 - NodeJS back-end API, in the `/server` path.
 
 2 - ReactJS web front-end, in the `/web` path.
 
 3 - React-Native with expo mobile app, in the `/mobile` path.
-
-4 - An small static web pages, created with html and css, to show the informations about this project, to up to GitHub pages, in the `/docs` path.
 
 ## :bookmark_tabs: Readme Contents
 
@@ -40,12 +43,21 @@ This is the **Ecoleta** project created in the **Next Level Week** event made by
         - [Back-End](#pager-Back-End)
         - [Front-End](#computer-Front-End)
         - [Mobile](#iphone-Mobile)
+    - [How to run](#floppy_disk-How-to-run)
+        - [1 - Clone the repository](#1-Clone-the-repository)
+        - [2 - Install dependencies and run node back-end](#2-Install-dependencies-and-run-node-back-end)
+        - [3 - Change the localhost IP](#3-Change-the-localhost-IP)
+            - [Back-end](#Back-end)
+            - [Front-end](#Front-end)
+            - [Mobile](#Mobile)
+        - [4 - Install dependencies and run ReacJS front-end](#4-Install-dependencies-and-run-ReacJS-front-end)
+        - [5 - Install dependencies and run mobile React-Native app](#5-Install-dependencies-and-run-mobile-React-Native-app)
     - [Future](#flags-Future)
         - [Send errors informations from back-end for front-end](#Send-errors-informations-from-back-end-for-front-end)
         - [Add support to authentication and edit informations](#Add-support-to-authentication-and-edit-informations)
         - [(Mobile Only) Change the Map Initialization position](#Mobile-Only-Change-the-Map-Initialization-position)
         - [(Mobile Only) Create Point](#Mobile-Only-Create-Point)
-    - [Creator](#nerd_face-creator)
+    - [Creator](#nerd_face-Creator)
 
 ## :heart: Best Points in the Event to Me
 
@@ -124,6 +136,86 @@ Some features of the apps is not developed in the **Next Level Week** and, some 
 - Added state (UF) and city selector with IBGE API support:
 
 - Added an button\link to open the map location with external apps (e.g. opening in **Uber** app).
+
+## :floppy_disk: How to run
+
+The first thing about run this app you need know is: you need to change the IP in all files using the back-end server ip in `server`, `web` and `mobile` projects (make this, after the back-end server started).
+
+### 1 - Clone the repository
+
+```bash
+git clone https://github.com/EduardoJM/Ecoleta.git
+cd Ecoleta
+```
+
+### 2 - Install dependencies and run node back-end
+
+From the `Ecoleta` root folder, go to the `server` path and run the `npm install` command.
+
+```bash
+cd server
+npm install
+```
+
+After installing dependencies, run the `knex:migrate` and the `knex:seed` npm scripts to create `.sqlite` database.
+
+```bash
+npm run knex:migrate
+npm run knex:seed
+```
+
+After creating database, run the `dev` npm script to execute the devlopment server.
+
+```bash
+npm run dev
+```
+
+And, now, the server is started.
+
+### 3 - Change the localhost IP
+
+Change the localhost IP to your localhost IP in those files:
+
+#### Back-end
+
+```
+Ecoleta/server/src/controllers/ItemsController.ts
+Ecoleta/server/src/controllers/PointsController.ts
+```
+
+#### Front-end
+
+```
+Ecoleta/web/src/services/api.ts
+```
+
+#### Mobile
+
+```
+Ecoleta/mobile/src/services/api.ts
+```
+
+### 4 - Install dependencies and run ReacJS front-end
+
+From the `Ecoleta` root folder, go to the `web` path and run the `npm install` command. After the install of dependencies, run the `start` npm script.
+
+```bash
+cd web
+npm install
+npm start
+```
+
+### 5 - Install dependencies and run mobile React-Native app
+
+From the `Ecoleta` root folder, go to the `mobile` path and run the `npm install` command. After the install of dependencies, run the `start` npm script.
+
+```bash
+cd mobile
+npm install
+npm start
+```
+
+Now, scan the QRCode from the terminal to your mobile phone expo application.
 
 ## :flags: Future
 

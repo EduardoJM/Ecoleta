@@ -4,6 +4,7 @@ const validation = celebrate({
     body: Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().required().email(),
+        password: Joi.string().required(),
         whatsapp: Joi.string().required().length(11),
         latitude: Joi.number().required(),
         longitude: Joi.number().required(),

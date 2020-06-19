@@ -1,5 +1,6 @@
 import { Request, Response, query } from 'express';
 import knex from '../database/connection';
+import bcrypt from 'bcryptjs';
 
 class PointsController {
     async index(request: Request, response: Response) {
@@ -80,6 +81,7 @@ class PointsController {
         const {
             name,
             email,
+            password,
             whatsapp,
             latitude,
             longitude,
@@ -87,13 +89,29 @@ class PointsController {
             uf,
             items,
         } = request.body;
-    
+        // make the e-mail as unique
+        const hasSameEmail = await knex('points').where('email', email);
+        if (hasSameEmail.length > 0) {
+            return response.status(400)
+                .json({
+                    error: true,
+                    information: {
+                        in: 'create_point',
+                        code: 'EMAIL_ALREADY_REGISTERED',
+                        message: 'Only one point per e-mail permited.',
+                    },
+                });
+        }
+        // create the password hash 
+        const passwordHash = await bcrypt.hash(password, 10);
+        // initialize the knex transaction
         const trx = await knex.transaction();
 
         const point = {
             image: request.file.filename,
             name,
             email,
+            password: passwordHash,
             whatsapp,
             latitude,
             longitude,
@@ -121,6 +139,7 @@ class PointsController {
         return response.json({
             id: pointId,
             ... point,
+            password: undefined,
         });
     }
 }

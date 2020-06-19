@@ -1,6 +1,7 @@
-import { Request, Response, query } from 'express';
+import { Request, Response } from 'express';
 import knex from '../database/connection';
 import bcrypt from 'bcryptjs';
+import generateToken from '../utils/token';
 
 class PointsController {
     async index(request: Request, response: Response) {
@@ -135,11 +136,22 @@ class PointsController {
         await trx('point_items').insert(pointItems);
 
         await trx.commit();
+
+        const token = generateToken({ id: pointId });
     
         return response.json({
-            id: pointId,
-            ... point,
-            password: undefined,
+            point: {
+                id: pointId,
+                ... point,
+                password: undefined,
+            },
+            token,
+        });
+    }
+
+    async update(request: Request, response: Response) {
+        return response.json({
+            ok: 'deu!!!!'
         });
     }
 }

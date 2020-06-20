@@ -50,6 +50,7 @@ const CreatePoint = () => {
         name: '',
         email: '',
         whatsapp: '',
+        password: '',
     });
 
     const history = useHistory();
@@ -155,7 +156,7 @@ const CreatePoint = () => {
 
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
-        const { name, email, whatsapp } = formData;
+        const { name, email, whatsapp, password } = formData;
         const uf = selectedUf;
         const city = selectedCity;
         const [latitude, longitude] = selectedPosition;
@@ -177,6 +178,7 @@ const CreatePoint = () => {
             latitude,
             longitude,
             items,
+            password,
         });
         
         if (!validationResult) {
@@ -190,6 +192,7 @@ const CreatePoint = () => {
         const data = new FormData();
         data.append('name', name);
         data.append('email', email);
+        data.append('password', password);
         data.append('whatsapp', whatsapp);
         data.append('uf', uf);
         data.append('city', city);
@@ -255,9 +258,22 @@ const CreatePoint = () => {
                                 type="text"
                                 name="whatsapp"
                                 id="whatsapp"
+                                placeholder="DDNNNNNNNNN"
                                 onChange={handleInputChange}
                             />
+                            <span className="info">O whatsapp deve conter apenas números, com 11 digitos (Os dois primeiros são o DDD e os outros 9 são o número).</span>
                         </div>
+                    </div>
+
+                    <div className="field">
+                        <label htmlFor="password">Senha</label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            onChange={handleInputChange}
+                        />
+                        <span className="info">Sua senha será necessária para a alteração de dados ou para a exclusão do ponto de coleta de nossas listas.</span>
                     </div>
                 </fieldset>
 

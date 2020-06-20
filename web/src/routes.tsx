@@ -1,22 +1,31 @@
 import React from 'react';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 
+import NotFound from './pages/NotFound';
+
 import Home from './pages/Home';
 import Points from './pages/Points';
 import CreatePoint from './pages/CreatePoint';
-import NotFound from './pages/NotFound';
+import SignIn from'./pages/SignIn';
+import PointDashboard from './pages/PointDashboard';
+
+import { AuthProvider } from './contexts/auth';
 
 const Routes = () => {
     return (
         <BrowserRouter>
-            <Switch>
-                <Route component={Home} path="/" exact />
-                <Route component={Points} path="/points/:uf/:city" />
-                <Route component={CreatePoint} path="/create-point" />
-                <Route component={NotFound} />
-            </Switch>
+            <AuthProvider>
+                <Switch>
+                    <Route component={Home} path="/" exact />
+                    <Route component={Points} path="/points/:uf/:city" />
+                    <Route component={CreatePoint} path="/create-point" />
+                    <Route component={SignIn} path="/signin" />
+                    <Route component={PointDashboard} path="/dashboard" exact />
+                    <Route component={NotFound} />
+                </Switch>
+            </AuthProvider>
         </BrowserRouter>
     );
-}
+};
 
 export default Routes;

@@ -1,5 +1,6 @@
 import React from 'react';
-import './App.css';
+import './styles/App.css';
+import './styles/form.css';
 
 import Routes from './routes';
 

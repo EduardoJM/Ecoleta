@@ -1,0 +1,138 @@
+form.styled {
+    margin: 80px auto;
+    padding: 64px;
+    max-width: 730px;
+    background: #FFF;
+    border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+form.styled h1 {
+    font-size: 36px;
+}
+
+form.styled fieldset {
+    margin-top: 64px;
+    min-inline-size: auto;
+    border: 0;
+}
+
+form.styled legend {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+form.styled legend h2 {
+    font-size: 24px;
+}
+
+form.styled legend span {
+    font-size: 14px;
+    font-weight: normal;
+    color: var(--text-color);
+}
+
+form.styled .field-group {
+    flex: 1;
+    display: flex;
+}
+
+form.styled .field {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}
+
+form.styled .field input[type=text],
+form.styled .field input[type=password],
+form.styled .field input[type=email],
+form.styled .field input[type=number] {
+    /*flex: 1;*/
+    width: 100%;
+    background: #F0F0F5;
+    border-radius: 8px;
+    border: 0;
+    padding: 16px 24px;
+    font-size: 16px;
+    color: #6C6C80;
+}
+
+form.styled .field select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    flex: 1;
+    background: #F0F0F5;
+    border-radius: 8px;
+    border: 0;
+    padding: 16px 24px;
+    font-size: 16px;
+    color: #6C6C80;
+}
+
+form.styled .field input::placeholder {
+    color: #A0A0B2;
+}
+
+form.styled .field label {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+form.styled .field :disabled {
+    cursor: not-allowed;
+}
+
+form.styled .field-group .field + .field {
+    margin-left: 24px;
+}
+
+form.styled .field-group input + input {
+    margin-left: 24px;
+}
+
+form.styled .field-check {
+    flex-direction: row;
+    align-items: center;
+}
+
+form.styled .field-check input[type=checkbox] {
+    background: #F0F0F5;
+}
+
+form.styled .field-check label {
+    margin: 0 0 0 8px;
+}
+
+form.styled .leaflet-container {
+    width: 100%;
+    height: 350px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+form.styled button {
+    width: 260px;
+    height: 56px;
+    background: var(--primary-color);
+    border-radius: 8px;
+    color: #FFF;
+    font-weight: bold;
+    font-size: 16px;
+    border: 0;
+    align-self: flex-end;
+    margin-top: 40px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+form.styled button:hover {
+    background: #2FB86E;
+}

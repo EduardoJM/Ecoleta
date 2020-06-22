@@ -219,7 +219,7 @@ const CreatePoint = () => {
         <div id="page-create-point">
             <Header />
 
-            <form onSubmit={handleSubmit}>
+            <form className="styled" onSubmit={handleSubmit}>
                 <h1>Cadastro do<br/> ponto de coleta</h1>
 
                 <Dropzone onFileUploaded={handleImageSelect} />

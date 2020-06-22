@@ -35,21 +35,37 @@ const SignIn = () => {
 
     return (
         <div id="page-signin">
-            <div className="content">
-                <Header />
+            <Header />
 
-                <div style={{ marginTop: 100}}>
-                    <h2>Logar</h2>
-                    <p>Faça login para poder alterar seus dados cadastrais ou excluir seu ponto de coleta da nossa listagem.</p>
+            <form className="styled" onSubmit={handleSignIn}>
+                <fieldset>
+                    <legend>
+                        <h2>Logar</h2>
+                        <span>Faça login para poder alterar seus dados cadastrais ou excluir seu ponto de coleta da nossa listagem.</span>
+                    </legend>
 
-                    <form onSubmit={handleSignIn}>
-                        <input type="email" name="email" onChange={handleInputChange} />
-                        <input type="password" name="password" onChange={handleInputChange} />
+                    <div className="field">
+                        <label htmlFor="name">E-mail</label>
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                    <div className="field">
+                        <label htmlFor="name">Senha</label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            onChange={handleInputChange}
+                        />
+                    </div>
+                </fieldset>
 
-                        <button type="submit">Logar</button>
-                    </form>
-                </div>
-            </div>
+                <button type="submit">Logar</button>
+            </form>
         </div>
     );
 };

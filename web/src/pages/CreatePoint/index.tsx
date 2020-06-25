@@ -1,8 +1,8 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FiCheckCircle, FiX, FiXCircle } from 'react-icons/fi';
-import { Map, TileLayer, Marker } from 'react-leaflet';
 import axios from 'axios';
+import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
 
 import validateCreatePointData from './validation';

@@ -31,12 +31,21 @@ class AuthController {
         }
         const token = generateToken({ id: point.id });
 
+        const serializedPoint = {
+            ...point,
+            password: undefined,
+            image_url: `http://10.0.0.103:3333/uploads/images/${point.image}`,
+        };
+
+        const items = await knex('items')
+            .join('point_items', 'items.id', '=', 'point_items.item_id')
+            .where('point_items.point_id', point.id)
+            .select('items.title', 'items.id');
+
         return response.json({
-            point: {
-                ...point,
-                password: undefined,
-            },
-            token
+            point: serializedPoint,
+            items,
+            token,
         });
     }
 }

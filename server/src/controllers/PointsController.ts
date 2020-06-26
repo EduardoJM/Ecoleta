@@ -150,8 +150,92 @@ class PointsController {
     }
 
     async update(request: Request, response: Response) {
+        const {
+            originalemail,
+            name,
+            email,
+            password,
+            whatsapp,
+            latitude,
+            longitude,
+            city,
+            uf,
+            items,
+        } = request.body;
+        // make the new e-mail as unique
+        if (email && email != '' && email !== originalemail) {
+            const hasSameEmail = await knex('points').where('email', email);
+            if (hasSameEmail.length > 0) {
+                return response.status(400)
+                    .json({
+                        error: true,
+                        information: {
+                            in: 'create_point',
+                            code: 'EMAIL_ALREADY_REGISTERED',
+                            message: 'Only one point per e-mail permited.',
+                        },
+                    });
+            }
+        }
+        let passwordHash = undefined;
+        // create the password hash 
+        if (password && password !== '') {
+            passwordHash = await bcrypt.hash(password, 10);
+        }
+        // initialize the knex transaction
+        const trx = await knex.transaction();
+
+        const point = {
+            name,
+            email,
+            password: passwordHash,
+            whatsapp,
+            latitude,
+            longitude,
+            city,
+            uf,
+        };
+        
+        const rawPoint = await trx('points')
+            .where('email', '=', originalemail)
+            .first();
+        if (!rawPoint) {
+            trx.rollback();
+            return response.status(400).json({
+                message: 'raw point not found.',
+            });
+        }
+        const result = await trx('points')
+            .where('email', '=', originalemail)
+            .update(point);
+        
+        const pointId = rawPoint.id;
+
+        if (items && items !== '') {
+            await trx('point_items')
+                .where('point_id', '=', pointId)
+                .delete();
+
+            const pointItems = items
+                .split(',')
+                .map((item: string) => Number(item.trim()))
+                .map((itemId: number) => {
+                    return {
+                        item_id: itemId,
+                        point_id: pointId,
+                    }
+                });
+            await trx('point_items').insert(pointItems);
+        }
+
+        await trx.commit();
+        
         return response.json({
-            ok: 'deu!!!!'
+            point: {
+                id: pointId,
+                ... point,
+                password: undefined,
+            },
         });
     }
 }

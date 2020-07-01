@@ -1,6 +1,5 @@
 // import packages
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import axios from 'axios';
 import { FiLogIn, FiX } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
 // import services

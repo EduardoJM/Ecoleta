@@ -1,19 +1,18 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, FormEvent, ChangeEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
+import { FiCheckCircle, FiX, FiXCircle } from 'react-icons/fi';
 
 import { getUfs, getCities } from '../../services/ibge';
 import { useAuth } from '../../contexts/auth';
 import api from '../../services/api';
 
 import Header from '../../components/Header';
+import Dropzone from '../../components/Dropzone';
+import ItemSelector from '../../components/ItemSelector';
 
 import './styles.css';
-
-// TODO: check if is needed add some loading page
-
-// TODO: create the "dashboard"
 
 interface EditPointFormData {
     id: number;
@@ -33,14 +32,15 @@ interface InitialItem {
     id: number;
 }
 
-interface Item {
-    id: number;
-    title: string;
-    image_url: string;
+interface ErrorData {
+    error: string | boolean;
+    message: string;
 }
 
 const PointDashboard = () => {
     const { signed, point, items:initialItems, signOut } = useAuth();
+    const [ initialData, setInitialData ] = useState<EditPointFormData>({} as EditPointFormData);
+    const [ initialItemsCheck, setInitialItemsCheck ] = useState<number[]>([]);
     const [ formData, setFormData ] = useState<EditPointFormData>({
         id: -1,
         image: '',
@@ -53,17 +53,26 @@ const PointDashboard = () => {
         latitude: 0,
         longitude: 0,
     });
-    const [items, setItems] = useState<Item[]>([]);
-    const [selectedItems, setSelectedItems] = useState<number[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
-    const [ufs, setUfs] = useState<string[]>([]);
-    const [cities, setCities] = useState<string[]>([]);
+    const [ selectedItems, setSelectedItems ] = useState<number[]>([]);
+    const [ loading, setLoading ] = useState(true);
+    const [ initialPosition, setInitialPosition ] = useState<[number, number]>([0, 0]);
+    const [ ufs, setUfs ] = useState<string[]>([]);
+    const [ cities, setCities ] = useState<string[]>([]);
+    const [ errorData, setErrorData ] = useState<ErrorData>({
+        error: false,
+        message: '',
+    });
+    const [fileError, setFileError] = useState('');
+    const [ hasCompleted, setHasCompleted ] = useState<boolean>(false);
+    const [ selectedFile, setSelectedFile ] = useState<File>();
     
     useEffect(() => {
         getUfs((result) => {
             if (result.error) {
-                console.log(result.errorMessage);
+                setErrorData({
+                    error: true,
+                    message: 'Não foi possível carregar os dados do IBGE',
+                });
                 return;
             }
             setUfs(result.ufs);
@@ -71,23 +80,12 @@ const PointDashboard = () => {
     }, []);
 
     useEffect(() => {
-        api.get('items').then((response) => {
-            if (response.status !== 200) {
-                /*setErrorData({
-                    error: true,
-                    message: 'Não foi possível carregar os itens.',
-                });*/
-                console.log("ERRO!");
-                return;
-            }
-            setItems(response.data);
-        });
-    }, []);
-
-    useEffect(() => {
         getCities(formData.uf, (result) => {
             if (result.error) {
-                console.log(result.errorMessage);
+                setErrorData({
+                    error: true,
+                    message: 'Não foi possível carregar os dados do IBGE',
+                });
                 return;
             }
             setCities(result.cities);
@@ -106,13 +104,16 @@ const PointDashboard = () => {
         if (point) {
             const pointData = point as EditPointFormData;
             setFormData(pointData);
+            setInitialData(pointData);
             setLoading(false);
             setInitialPosition([pointData.latitude, pointData.longitude]);
         }
     }, [point]);
 
     useEffect(() => {
-        setSelectedItems(initialItems.map(item => (item as InitialItem).id));
+        const array = initialItems.map(item => (item as InitialItem).id);
+        setSelectedItems(array);
+        setInitialItemsCheck(array);
     }, [initialItems]);
 
     function handleSignOut() {
@@ -150,29 +151,104 @@ const PointDashboard = () => {
         });
     }
 
-    function handleSelectItem(id: number) {
-        const alreadySelected = selectedItems.includes(id);
-        if (alreadySelected) {
-            const filteredItems = selectedItems.filter((item) => item !== id);
-            setSelectedItems(filteredItems);
-        } else {
-            setSelectedItems([...selectedItems, id])
+    function handleImageSelect(file: File) {
+        if (file.size >= 1048576) {
+            setFileError("Tamanho do arquivo deve ser no máximo de 1mb");
+            return false;
         }
+        setSelectedFile(file);
+        setFileError('');
+        return true;
+    }
+
+    async function handleSubmit(event: FormEvent) {
+        event.preventDefault();
+        
+        const {
+            name,
+            email,
+            whatsapp,
+            password,
+            uf,
+            city,
+            latitude,
+            longitude,
+        } = formData;
+        const items = selectedItems;
+
+        const data = new FormData();
+        data.append('originalemail', initialData.email);
+        if (name !== initialData.name) {
+            data.append('name', name);
+        }
+        if (email !== initialData.email) {
+            data.append('email', email);
+        }
+        if (password && password !== '') {
+            data.append('password', password);
+        }
+        if (whatsapp !== initialData.whatsapp) {
+            data.append('whatsapp', whatsapp);
+        }
+        if (uf !== initialData.uf) {
+            data.append('uf', uf);
+        }
+        if (city !== initialData.city) {
+            data.append('city', city);
+        }
+        if (latitude !== initialData.latitude) {
+            data.append('latitude', String(latitude));
+        }
+        if (longitude !== initialData.longitude) {
+            data.append('longitude', String(longitude));
+        }
+        const filter1 = items.filter((id) => !initialItemsCheck.includes(id));
+        const filter2 = initialItemsCheck.filter((id) => !items.includes(id));
+        if (filter1.length > 0 || filter2.length > 0) {
+            data.append('items', items.join(','));
+        }
+        // if image is set, add this to data
+        if (selectedFile) {
+            data.append('image', selectedFile);
+        }
+        const response = await api.post('points/update', data);
+        if (response.status !== 200) {
+            setErrorData({
+                error: true,
+                message: 'Erro ao cadastrar o ponto de coleta.',
+            });
+            return;
+        }
+        // update the local storage and edit dashboard initial items
+        localStorage.setItem('@EcoletaAuth:point', JSON.stringify(response.data.point));
+        localStorage.setItem('@EcoletaAuth:items', JSON.stringify(response.data.items));
+        setInitialData(response.data.point);
+        const array = (response.data.items as object[]).map(item => (item as InitialItem).id);
+        setInitialItemsCheck(array);
+        setHasCompleted(true);
     }
 
     if (loading) {
-        return <h1>Loading...</h1>;
+        return <div />;
     }
 
     return (
         <div id="page-dashboard">
-            <Header />
+            <Header>
+                <div className="header-exit">
+                    <h2>Dashboard</h2>
+                    <span onClick={handleSignOut}>Sair</span>
+                </div>
+            </Header>
 
-            <h2>Dashboard</h2>
-            <button onClick={handleSignOut}>Sair</button>
+            <form className="styled" onSubmit={handleSubmit}>
+                <h1>Atualizar <br/>Ponto de coleta</h1>
 
-            <form className="styled">
-                <h1>Ponto de coleta</h1>
+                <Dropzone onFileUploaded={handleImageSelect} />
+                {fileError && (
+                    <p>{fileError}</p>
+                )}
+                <span className="info">Caso não queira alterar a imagem, basta não adicionar imagem nesse campo.</span>
 
                 <fieldset>
                     <legend>
@@ -275,30 +351,52 @@ const PointDashboard = () => {
                     </div>
                 </fieldset>
 
-                <fieldset>
-                    <legend>
-                        <h2>Ítens de coleta</h2>
-                        <span>Selecione um ou mais ítens abaixo</span>
-                    </legend>
-
-                    <ul className="items-grid">
-                        {items.map((item) => (
-                            <li
-                                className={selectedItems.includes(item.id) ? 'selected' : ''}
-                                key={item.id}
-                                onClick={() => handleSelectItem(item.id)}
-                            >
-                                <img src={item.image_url} alt={item.title} />
-                                <span>{item.title}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </fieldset>
+                <ItemSelector
+                    selectedItems={selectedItems}
+                    setSelectedItems={setSelectedItems}
+                />
 
                 <button type="submit">
                     Atualizar ponto de coleta
                 </button>
             </form>
+
+            {errorData.error && (
+                <div className="overlay">
+                    <div
+                        className="close-button"
+                        onClick={() => setErrorData({ error: false, message: '' })}
+                    >
+                        <FiX />
+                    </div>
+                    <div className="icon-area red-icon">
+                        <FiXCircle />
+                    </div>
+                    <div className="text-area">
+                        <div>Erro no cadastro</div>
+                        <div className="medium">{errorData.message}</div>
+                        <div className="medium">Esse pode ser um erro com a sua internet. Caso persista, entre em contato pelo e-mail:</div>
+                        <div className="small">eduardo_y05@outlook.com</div>
+                    </div>
+                </div>
+            )}
+            
+            {hasCompleted && (
+                <div className="overlay">
+                    <div
+                        className="close-button"
+                        onClick={() => setHasCompleted(false)}
+                    >
+                        <FiX />
+                    </div>
+                    <div className={`icon-area green-icon`}>
+                        <FiCheckCircle />
+                    </div>
+                    <div className="text-area">
+                        <div>Cadastro Atualizado!</div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

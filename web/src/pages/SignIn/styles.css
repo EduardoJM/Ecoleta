@@ -8,6 +8,7 @@
 #page-signin form {
     padding: 30px;
     margin: 30px auto;
+    max-width: 500px;
 }
 
 #page-signin form fieldset {

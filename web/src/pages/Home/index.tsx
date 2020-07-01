@@ -69,6 +69,10 @@ const Home = () => {
         setModalVisible(false);
     }
 
+    function handleLogin() {
+        history.push('/signin');
+    }
+
     return (
         <>
             <div id="page-home">
@@ -88,7 +92,7 @@ const Home = () => {
                             <strong>Cadastre um ponto de coleta</strong>
                         </Link>
 
-                        <p>Ou <span className="fake-link" onClick={handleSearchClick}>encontre um ponto próximo de você</span>.</p>
+                        <p>Ou <span className="fake-link" onClick={handleSearchClick}>encontre um ponto próximo de você</span>. Você pode, também, <span className="fake-link" onClick={handleLogin}>entrar para alterar seus dados</span>.</p>
                     </main>
                 </div>
             </div>

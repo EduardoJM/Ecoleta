@@ -5,10 +5,12 @@ import { FiArrowLeft } from 'react-icons/fi';
 import './styles.css';
 import logo from '../../assets/logo.svg';
 
-const Header = () => {
+const Header : React.FC = ({ children }) => {
     return (
         <header>
             <img src={logo} alt="Ecoleta"/>
+
+            { children }
 
             <Link to="/">
                 <FiArrowLeft />

@@ -4,3 +4,13 @@
 
     margin: 0 auto;
 }
+
+#page-dashboard .header-exit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#page-dashboard .header-exit span {
+    cursor: pointer;
+}

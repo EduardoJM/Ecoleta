@@ -22,7 +22,7 @@ routes.get('/points/:id', pointsController.show);
 
 routes.post(
     '/points/update',
-    //validation,
+    upload.single('image'),
     authMiddleware,
     pointsController.update
 );

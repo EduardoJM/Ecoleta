@@ -9,16 +9,11 @@ import validateCreatePointData from './validation';
 
 import Header from '../../components/Header';
 import Dropzone from '../../components/Dropzone';
+import ItemSelector from '../../components/ItemSelector';
 
 import api from '../../services/api';
 
 import './styles.css';
-
-interface Item {
-    id: number;
-    title: string;
-    image_url: string;
-}
 
 interface IBGEUFResponse {
     sigla: string;
@@ -41,7 +36,6 @@ const CreatePoint = () => {
     const [fileError, setFileError] = useState('');
     const [hasCompleted, setHasCompleted] = useState(false);
 
-    const [items, setItems] = useState<Item[]>([]);
     const [ufs, setUfs] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
     const [initialPosition, setInitialPosition] = useState<[number, number]>([-16.3390798, -48.9303596]);
@@ -68,19 +62,6 @@ const CreatePoint = () => {
         });
     }, []);
     
-    useEffect(() => {
-        api.get('items').then((response) => {
-            if (response.status !== 200) {
-                setErrorData({
-                    error: true,
-                    message: 'Não foi possível carregar os itens.',
-                });
-                return;
-            }
-            setItems(response.data);
-        });
-    }, []);
-
     useEffect(() => {
         axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then((response) => {
             if (response.status !== 200) {
@@ -132,16 +113,6 @@ const CreatePoint = () => {
     function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
-    }
-
-    function handleSelectItem(id: number) {
-        const alreadySelected = selectedItems.includes(id);
-        if (alreadySelected) {
-            const filteredItems = selectedItems.filter((item) => item !== id);
-            setSelectedItems(filteredItems);
-        } else {
-            setSelectedItems([...selectedItems, id])
-        }
     }
 
     function handleImageSelect(file: File) {
@@ -327,25 +298,11 @@ const CreatePoint = () => {
                     </div>
                 </fieldset>
 
-                <fieldset>
-                    <legend>
-                        <h2>Ítens de coleta</h2>
-                        <span>Selecione um ou mais ítens abaixo</span>
-                    </legend>
-
-                    <ul className="items-grid">
-                        {items.map((item) => (
-                            <li
-                                className={selectedItems.includes(item.id) ? 'selected' : ''}
-                                key={item.id}
-                                onClick={() => handleSelectItem(item.id)}
-                            >
-                                <img src={item.image_url} alt={item.title} />
-                                <span>{item.title}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </fieldset>
+                <ItemSelector
+                    selectedItems={selectedItems}
+                    setSelectedItems={setSelectedItems}
+                    handleError={(message) => setErrorData({ error: true, message})}
+                />
 
                 <button type="submit">
                     Cadastrar ponto de coleta

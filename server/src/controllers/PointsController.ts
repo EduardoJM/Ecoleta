@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
-import knex from '../database/connection';
 import bcrypt from 'bcryptjs';
+import fs from 'fs';
+import path from 'path';
+import knex from '../database/connection';
 import generateToken from '../utils/token';
 
 class PointsController {
@@ -162,6 +164,7 @@ class PointsController {
             uf,
             items,
         } = request.body;
+        
         // make the new e-mail as unique
         if (email && email != '' && email !== originalemail) {
             const hasSameEmail = await knex('points').where('email', email);
@@ -185,6 +188,24 @@ class PointsController {
         // initialize the knex transaction
         const trx = await knex.transaction();
 
+        const rawPoint = await trx('points')
+            .where('email', originalemail)
+            .first();
+        if (!rawPoint) {
+            trx.rollback();
+            return response.status(400).json({
+                message: 'raw point not found.',
+            });
+        }
+        const pointId = rawPoint.id;
+
+        let image : undefined | string = undefined;
+        if (request.file) {
+            // an new file is uploaded
+            fs.unlinkSync(path.join(__dirname, '..', '..', 'uploads', 'images', rawPoint.image));
+            image = request.file.filename;
+        }
+
         const point = {
             name,
             email,
@@ -194,26 +215,16 @@ class PointsController {
             longitude,
             city,
             uf,
+            image,
         };
-        
-        const rawPoint = await trx('points')
-            .where('email', '=', originalemail)
-            .first();
-        if (!rawPoint) {
-            trx.rollback();
-            return response.status(400).json({
-                message: 'raw point not found.',
-            });
-        }
+
         const result = await trx('points')
-            .where('email', '=', originalemail)
+            .where('id', pointId)
             .update(point);
-        
-        const pointId = rawPoint.id;
 
         if (items && items !== '') {
             await trx('point_items')
-                .where('point_id', '=', pointId)
+                .where('point_id', pointId)
                 .delete();
 
             const pointItems = items
@@ -228,14 +239,26 @@ class PointsController {
             await trx('point_items').insert(pointItems);
         }
 
+        const outputPoint = await trx('points')
+            .where('id', pointId)
+            .first();
+
+        const serializedOutputPoint = {
+            ...outputPoint,
+            password: undefined,
+            image_url: `http://10.0.0.103:3333/uploads/images/${outputPoint.image}`,
+        };
+
+        const outputItems = await trx('items')
+            .join('point_items', 'items.id', '=', 'point_items.item_id')
+            .where('point_items.point_id', pointId)
+            .select('items.title', 'items.id');
+
         await trx.commit();
-        
+
         return response.json({
-            point: {
-                id: pointId,
-                ... point,
-                password: undefined,
-            },
+            point: serializedOutputPoint,
+            items: outputItems,
         });
     }
 }

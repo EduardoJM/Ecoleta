@@ -1,17 +1,17 @@
-# :recycle: Ecoleta React-Native Application (Mobile)
+# :recycle: Aplicativo para celular Ecoleta (React-Native)
 
-## :information_source: About
+## :information_source: Sobre
 
-This is the code for the mobile app created in the **Next Level Week** from **Rocketseat**. For information about complete application, view the `README.md` in root of the repository.
+Esse é o código para o aplicativo mobile criado no evento **Next Level Week** da **Rocketseat**. Para informações sobre a aplicação completa, veja o `README-pt-br.md` na pasta raíz do repositório.
 
-## :flags: Future
+## :flags: Futuro
 
-Some features, that i want to add to this app was not in this version and, in this section, i decided to list each of this features for a mental helper for next changes in this code.
+Algumas funcionalidades que eu desejo adicionar no aplicativo não estão, ainda, nessa versão e, nessa seção, eu decidi listar cada uma dessas funcionalidades para uma ajuda mental para as próximas alterações no código.
 
-### Map initialization position
+### Posição de inicialização do mapa
 
-In the future, i want to initialize the map in the selected state and city and not in the phone location. This is because not make sense for a people locating a point in other city and the map visualization initialize in your city.
+No futuro, eu quero inicializar o mapa na cidade e estado selecionado e não na localização do celular. Isso porque não faz sentido para uma pessoa procurando um ponto em outra cidade e a visualização do mapa inicializar na cidade em que ela está.
 
-### Create Point
+### Criar pontos
 
-Add support to create point in the mobile application. This is planed to the future.
+Adicionar suporte para criar pontos no aplicativo para celular.

@@ -76,7 +76,7 @@ const PointDashboard = () => {
                 return;
             }
             setUfs(result.ufs);
-        })
+        });
     }, []);
 
     useEffect(() => {

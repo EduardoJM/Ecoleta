@@ -1,27 +1,20 @@
+// import packages
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FiCheckCircle, FiX, FiXCircle } from 'react-icons/fi';
-import axios from 'axios';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
-
+// import validation
 import validateCreatePointData from './validation';
-
+// import components
 import Header from '../../components/Header';
 import Dropzone from '../../components/Dropzone';
 import ItemSelector from '../../components/ItemSelector';
-
+// import services
+import { getUfs, getCities } from '../../services/ibge';
 import api from '../../services/api';
-
+// import assets
 import './styles.css';
-
-interface IBGEUFResponse {
-    sigla: string;
-}
-
-interface IBGECityResponse {
-    nome: string;
-}
 
 interface ErrorData {
     error: string | boolean;
@@ -63,16 +56,15 @@ const CreatePoint = () => {
     }, []);
     
     useEffect(() => {
-        axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then((response) => {
-            if (response.status !== 200) {
+        getUfs((result) => {
+            if (result.error) {
                 setErrorData({
                     error: true,
                     message: 'Não foi possível carregar os dados do IBGE',
                 });
                 return;
             }
-            const ufInitials = response.data.map((uf) => uf.sigla);
-            setUfs(ufInitials);
+            setUfs(result.ufs);
         });
     }, []);
 
@@ -80,16 +72,15 @@ const CreatePoint = () => {
         if (selectedUf === '0') {
             return;
         }
-        axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then((response) => {
-            if (response.status !== 200) {
+        getCities(selectedUf, (result) => {
+            if (result.error) {
                 setErrorData({
                     error: true,
                     message: 'Não foi possível carregar os dados do IBGE',
                 });
                 return;
             }
-            const citiesData = response.data.map((city) => city.nome);
-            setCities(citiesData);
+            setCities(result.cities);
         });
     }, [selectedUf]);
 

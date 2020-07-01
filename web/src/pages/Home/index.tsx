@@ -1,18 +1,13 @@
+// import packages
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import axios from 'axios';
 import { FiLogIn, FiX } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
-
+// import services
+import { getUfs, getCities } from '../../services/ibge';
+// import assets
 import logo from '../../assets/logo.svg';
 import './styles.css';
-
-interface IBGEUFResponse {
-    sigla: string;
-}
-
-interface IBGECityResponse {
-    nome: string;
-}
 
 const Home = () => {
     const [ufs, setUfs] = useState<string[]>([]);
@@ -25,12 +20,11 @@ const Home = () => {
     const history = useHistory();
 
     useEffect(() => {
-        axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then((response) => {
-            if (response.status !== 200) {
+        getUfs((result) => {
+            if (result.error) {
                 return;
             }
-            const ufInitials = response.data.map((uf) => uf.sigla);
-            setUfs(ufInitials);
+            setUfs(result.ufs);
         });
     }, []);
 
@@ -38,12 +32,11 @@ const Home = () => {
         if (selectedUf === '0') {
             return;
         }
-        axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then((response) => {
-            if (response.status !== 200) {
+        getCities(selectedUf, (result) => {
+            if (result.error) {
                 return;
             }
-            const citiesData = response.data.map((city) => city.nome);
-            setCities(citiesData);
+            setCities(result.cities);
         });
     }, [selectedUf]);
 

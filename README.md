@@ -128,6 +128,12 @@ Algumas funcionalidades da aplicação não foram desenvolvidas durante o **Next
     <img src="images/preview/maxfilesize.gif" alt="max file size message" />
 </div>
 
+- Adicionado suporte para autenticação (com Json Web Token, JWT) permitindo a alteração de dados em pontos cadastrados.
+
+<div align="center">
+    <img src="images/preview/edit.gif" alt="editing information" />
+</div>
+
 ### :iphone: Mobile
 
 - Adicionado seleção de estado (UF) e cidade com suporte a API do IBGE.

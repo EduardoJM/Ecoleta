@@ -1,7 +1,7 @@
-# Images
+# Imagens
 
-This folder contains images used for development testing (like trash collect points) or used in the repository README's.
+Essa pasta contém as imagens usadas nos testes de desenvolvimento (como lixeiras de pontos de coleta) ou usadas nos README's do repositório.
 
-- The path `for-items` contains the images used for creating collect points in development testing.
+- A pasta `for-items` contém as imagens utilizadas para a criação dos pontos de coleta nos testes de desenvolvimento.
 
-- The path `preview`, contains the images used in the repository README's.
+- A pasta `preview` contém as imagens usadas nos README's do repositório.

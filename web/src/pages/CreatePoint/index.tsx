@@ -1,7 +1,7 @@
 // import packages
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import { useHistory } from 'react-router-dom';
-import { FiCheckCircle, FiX, FiXCircle } from 'react-icons/fi';
+import { FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
 // import validation
@@ -10,6 +10,7 @@ import validateCreatePointData from './validation';
 import Header from '../../components/Header';
 import Dropzone from '../../components/Dropzone';
 import ItemSelector from '../../components/ItemSelector';
+import Modal, { useModal } from '../../components/Modal';
 // import services
 import { getUfs, getCities } from '../../services/ibge';
 import api from '../../services/api';
@@ -17,7 +18,7 @@ import api from '../../services/api';
 import './styles.css';
 
 interface ErrorData {
-    error: string | boolean;
+    error: boolean;
     message: string;
 }
 
@@ -27,7 +28,7 @@ const CreatePoint = () => {
         message: '',
     });
     const [fileError, setFileError] = useState('');
-    const [hasCompleted, setHasCompleted] = useState(false);
+    const completedModal = useModal(false);
 
     const [ufs, setUfs] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
@@ -171,7 +172,7 @@ const CreatePoint = () => {
             });
             return;
         }
-        setHasCompleted(true);
+        completedModal.open();
         setTimeout(() => {
             history.push('/');
         }, 3000);
@@ -300,36 +301,34 @@ const CreatePoint = () => {
                 </button>
             </form>
 
-            {errorData.error && (
-                <div className="overlay">
-                    <div
-                        className="close-button"
-                        onClick={() => setErrorData({ error: false, message: '' })}
-                    >
-                        <FiX />
-                    </div>
-                    <div className="icon-area red-icon">
-                        <FiXCircle />
-                    </div>
-                    <div className="text-area">
-                        <div>Erro no cadastro</div>
-                        <div className="medium">{errorData.message}</div>
-                        <div className="medium">Esse pode ser um erro com a sua internet. Caso persista, entre em contato pelo e-mail:</div>
-                        <div className="small">eduardo_y05@outlook.com</div>
-                    </div>
+            <Modal
+                opened={errorData.error}
+                handleClose={() => setErrorData({ error: false, message: '' })}
+                hasCloseButton
+            >
+                <div className="icon-area red-icon">
+                    <FiXCircle />
                 </div>
-            )}
+                <div className="text-area">
+                    <div>Erro no cadastro</div>
+                    <div className="medium">{errorData.message}</div>
+                    <div className="medium">Esse pode ser um erro com a sua internet. Caso persista, entre em contato pelo e-mail:</div>
+                    <div className="small">eduardo_y05@outlook.com</div>
+                </div>
+            </Modal>
 
-            {hasCompleted && (
-                <div className="overlay">
-                    <div className={`icon-area green-icon`}>
-                        <FiCheckCircle />
-                    </div>
-                    <div className="text-area">
-                        <div>Cadastro Concluído!</div>
-                    </div>
+            <Modal
+                opened={completedModal.modalOpen}
+                hasCloseButton={false}
+                handleClose={() => {}}
+            >
+                <div className={`icon-area green-icon`}>
+                    <FiCheckCircle />
                 </div>
-            )}
+                <div className="text-area">
+                    <div>Cadastro Concluído!</div>
+                </div>
+            </Modal>
         </div>
     )
 };

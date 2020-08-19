@@ -2,7 +2,7 @@ import React, { useEffect, useState, FormEvent, ChangeEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
-import { FiCheckCircle, FiX, FiXCircle } from 'react-icons/fi';
+import { FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
 import { getUfs, getCities } from '../../services/ibge';
 import { useAuth } from '../../contexts/auth';
@@ -11,6 +11,7 @@ import api from '../../services/api';
 import Header from '../../components/Header';
 import Dropzone from '../../components/Dropzone';
 import ItemSelector from '../../components/ItemSelector';
+import Modal, { useModal } from '../../components/Modal';
 
 import './styles.css';
 
@@ -33,7 +34,7 @@ interface InitialItem {
 }
 
 interface ErrorData {
-    error: string | boolean;
+    error: boolean;
     message: string;
 }
 
@@ -63,7 +64,7 @@ const PointDashboard = () => {
         message: '',
     });
     const [fileError, setFileError] = useState('');
-    const [ hasCompleted, setHasCompleted ] = useState<boolean>(false);
+    const completeModal = useModal(false);
     const [ selectedFile, setSelectedFile ] = useState<File>();
     
     useEffect(() => {
@@ -225,7 +226,7 @@ const PointDashboard = () => {
         setInitialData(response.data.point);
         const array = (response.data.items as object[]).map(item => (item as InitialItem).id);
         setInitialItemsCheck(array);
-        setHasCompleted(true);
+        completeModal.open();
     }
 
     if (loading) {
@@ -361,42 +362,34 @@ const PointDashboard = () => {
                 </button>
             </form>
 
-            {errorData.error && (
-                <div className="overlay">
-                    <div
-                        className="close-button"
-                        onClick={() => setErrorData({ error: false, message: '' })}
-                    >
-                        <FiX />
-                    </div>
-                    <div className="icon-area red-icon">
-                        <FiXCircle />
-                    </div>
-                    <div className="text-area">
-                        <div>Erro no cadastro</div>
-                        <div className="medium">{errorData.message}</div>
-                        <div className="medium">Esse pode ser um erro com a sua internet. Caso persista, entre em contato pelo e-mail:</div>
-                        <div className="small">eduardo_y05@outlook.com</div>
-                    </div>
+            <Modal
+                opened={errorData.error}
+                handleClose={() => setErrorData({ error: false, message: '' })}
+                hasCloseButton
+            >
+                <div className="icon-area red-icon">
+                    <FiXCircle />
                 </div>
-            )}
-            
-            {hasCompleted && (
-                <div className="overlay">
-                    <div
-                        className="close-button"
-                        onClick={() => setHasCompleted(false)}
-                    >
-                        <FiX />
-                    </div>
-                    <div className={`icon-area green-icon`}>
-                        <FiCheckCircle />
-                    </div>
-                    <div className="text-area">
-                        <div>Cadastro Atualizado!</div>
-                    </div>
+                <div className="text-area">
+                    <div>Erro no cadastro</div>
+                    <div className="medium">{errorData.message}</div>
+                    <div className="medium">Esse pode ser um erro com a sua internet. Caso persista, entre em contato pelo e-mail:</div>
+                    <div className="small">eduardo_y05@outlook.com</div>
                 </div>
-            )}
+            </Modal>
+
+            <Modal
+                opened={completeModal.modalOpen}
+                handleClose={completeModal.close}
+                hasCloseButton
+            >
+                <div className="icon-area green-icon">
+                    <FiCheckCircle />
+                </div>
+                <div className="text-area">
+                    <div>Cadastro Atualizado!</div>
+                </div>
+            </Modal>
         </div>
     );
 };

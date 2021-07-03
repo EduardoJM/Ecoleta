@@ -6,6 +6,9 @@ export const errorCodes = {
     AVATAR_COMPRESS_ERROR: 'AVATAR_COMPRESS_ERROR',
     EMAIL_NOT_REGISTERED: 'EMAIL_NOT_REGISTERED',
     WRONG_PASSWORD: 'WRONG_PASSWORD',
+    AUTH_INVALID_TOKEN: 'AUTH_INVALID_TOKEN',
+    AUTH_EXPIRED_TOKEN: 'AUTH_EXPIRED_TOKEN',
+    AUTH_NO_TOKEN: 'AUTH_NO_TOKEN',
 };
 
 export const errorMessages = {
@@ -13,7 +16,10 @@ export const errorMessages = {
     EMAIL_REQUIRED: 'O e-mail é necessário',
     UNKNOWN_SAVE_ERROR: 'Não foi possível salvar',
     EMAIL_NOT_REGISTERED: 'E-mail ou senha incorretos',
-    WRONG_PASSWORD: 'E-mail ou senha incorretos'
+    WRONG_PASSWORD: 'E-mail ou senha incorretos',
+    AUTH_INVALID_TOKEN: 'Token de autenticação inválido',
+    AUTH_EXPIRED_TOKEN: 'Token de autenticação expirado',
+    AUTH_NO_TOKEN: 'Token de autenticação não enviado',
 };
 
 export const responses = {
@@ -36,5 +42,17 @@ export const responses = {
     WRONG_PASSWORD: {
         errorCodes: errorCodes.WRONG_PASSWORD,
         error: errorMessages.WRONG_PASSWORD,
+    },
+    AUTH_INVALID_TOKEN: {
+        errorCodes: errorCodes.AUTH_INVALID_TOKEN,
+        error: errorMessages.AUTH_INVALID_TOKEN,
+    },
+    AUTH_EXPIRED_TOKEN: {
+        errorCodes: errorCodes.AUTH_EXPIRED_TOKEN,
+        error: errorMessages.AUTH_EXPIRED_TOKEN,
+    },
+    AUTH_NO_TOKEN: {
+        errorCodes: errorCodes.AUTH_NO_TOKEN,
+        error: errorMessages.AUTH_NO_TOKEN,
     },
 };

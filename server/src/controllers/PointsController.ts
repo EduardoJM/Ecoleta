@@ -2,10 +2,19 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import fs from 'fs';
 import path from 'path';
-import knex from '../database/connection';
-import generateToken from '../utils/token';
 
-class PointsController {
+interface PointCreateBody {
+
+}
+
+export default class PointsController {
+    static async create(request: Request<any, any, PointCreateBody>, response: Response) {
+        console.log(request.user);
+        return response.send({});
+    }
+
+
+    /*
     async index(request: Request, response: Response) {
         // cidades, uf, items (Query params)
         const { city, uf, items, ignoreItems, returnItems, } = request.query;
@@ -261,6 +270,5 @@ class PointsController {
             items: outputItems,
         });
     }
+    */
 }
-
-export default PointsController;

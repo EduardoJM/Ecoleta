@@ -19,6 +19,8 @@ createConnection().then(async (connection) => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(routes);
+    
+    app.use('/static/avatars', express.static(path.resolve(__dirname, '..', 'static', 'avatars')));
     app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
 
     //app.use(errors());

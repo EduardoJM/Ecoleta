@@ -7,6 +7,8 @@ declare global {
             SQL_USER: string;
             SQL_PASSWORD: string;
             SQL_DATABASE: string;
+            JWT_SECRET: string;
+            JWT_EXPIRES: string | number;
         }
     }
 }

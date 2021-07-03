@@ -1,11 +1,16 @@
 import { Request, Response } from 'express';
-import knex from '../database/connection';
 import bcrypt from 'bcryptjs';
 import generateToken from '../utils/token';
 
+interface AuthRequestBody {
+    email: string;
+    password: string;
+}
+
 class AuthController {
-    async index(request: Request, response: Response) {
+    static async index(request: Request<any, any, AuthRequestBody>, response: Response) {
         const { email, password } = request.body;
+        /*
         const [point] = await knex('points').where('email', email);
         if (!point) {
             return response.status(400)
@@ -47,6 +52,7 @@ class AuthController {
             items,
             token,
         });
+        */
     }
 }
 

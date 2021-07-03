@@ -1,16 +1,62 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import fs from 'fs';
-import path from 'path';
+import { getRepository } from 'typeorm';
+import { User, Point } from '../entities';
+import { httpStatusCode, outputErrors } from '../constants';
 
 interface PointCreateBody {
-
+    image: string;
+    name: string;
+    email: string;
+    whatsapp: string;
+    latitude: number;
+    longitude: number;
+    city: string;
+    uf: string;
 }
 
 export default class PointsController {
     static async create(request: Request<any, any, PointCreateBody>, response: Response) {
-        console.log(request.user);
-        return response.send({});
+        if (!request.user) {
+            return response
+                .status(httpStatusCode.HTTP_400_BAD_REQUEST)
+                .json(outputErrors.responses.USER_NOT_FOUND);
+        }
+        const userId = request.user.id;
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOne({ where: { id: userId }});
+        if (!user) {
+            return response
+                .status(httpStatusCode.HTTP_400_BAD_REQUEST)
+                .json(outputErrors.responses.USER_NOT_FOUND);
+        }
+
+        const {
+            image, name, email, whatsapp, latitude, longitude, city, uf,
+        } = request.body;
+
+        const pointRepo = getRepository(Point);
+        const point = new Point();
+        point.image = image;
+        point.name = name;
+        point.email = email;
+        point.whatsapp = whatsapp;
+        point.latitude = latitude;
+        point.longitude = longitude;
+        point.city = city;
+        point.uf = uf;
+        point.user = user;
+
+        try {
+            const result = await pointRepo.save(point);
+
+            return response
+                .status(httpStatusCode.HTTP_201_CREATED)
+                .json(result.serialize(request));
+        } catch (err) {
+            return response
+                .status(httpStatusCode.HTTP_500_INTERNAL_SERVER_ERROR)
+                .json(outputErrors.responses.UNKNOWN_SAVE_ERROR);
+        }
     }
 
 

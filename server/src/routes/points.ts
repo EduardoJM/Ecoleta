@@ -7,6 +7,9 @@ const router = express.Router();
 router.post(
     '/point',
     auth.IsUserAuthenticated,
+    uploader.PointCreateImageUpload,
+    uploader.PointCreateImageCompressor,
+    validations.PointCreateDataValidation,
     controllers.points.create,
 );
 

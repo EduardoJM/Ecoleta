@@ -9,6 +9,9 @@ export const errorCodes = {
     AUTH_INVALID_TOKEN: 'AUTH_INVALID_TOKEN',
     AUTH_EXPIRED_TOKEN: 'AUTH_EXPIRED_TOKEN',
     AUTH_NO_TOKEN: 'AUTH_NO_TOKEN',
+    USER_NOT_FOUND: 'USER_NOT_FOUND',
+    IMAGE_UPLOAD_ERROR: 'IMAGE_UPLOAD_ERROR',
+    IMAGE_COMPRESSOR_ERROR: 'IMAGE_COMPRESSOR_ERROR',
 };
 
 export const errorMessages = {
@@ -20,6 +23,7 @@ export const errorMessages = {
     AUTH_INVALID_TOKEN: 'Token de autenticação inválido',
     AUTH_EXPIRED_TOKEN: 'Token de autenticação expirado',
     AUTH_NO_TOKEN: 'Token de autenticação não enviado',
+    USER_NOT_FOUND: 'Usuário não encontrado',
 };
 
 export const responses = {
@@ -54,5 +58,9 @@ export const responses = {
     AUTH_NO_TOKEN: {
         errorCodes: errorCodes.AUTH_NO_TOKEN,
         error: errorMessages.AUTH_NO_TOKEN,
+    },
+    USER_NOT_FOUND: {
+        errorCodes: errorCodes.USER_NOT_FOUND,
+        error: errorMessages.USER_NOT_FOUND,
     },
 };

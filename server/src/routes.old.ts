@@ -6,17 +6,17 @@ import validation from './middlewares/validation';
 import authMiddleware from './middlewares/auth';
 
 import PointsController from './controllers/PointsController';
-import ItemsController from './controllers/ItemsController';
+//import ItemsController from './controllers/ItemsController';
 import AuthController from './controllers/AuthController';
 
 const routes = express.Router();
 const upload = multer(multerConfig);
 
 const pointsController = new PointsController();
-const itemsController = new ItemsController();
+//const itemsController = new ItemsController();
 const authController = new AuthController();
 
-routes.get('/items', itemsController.index);
+//routes.get('/items', itemsController.index);
 routes.get('/points', pointsController.index);
 routes.get('/points/:id', pointsController.show);
 

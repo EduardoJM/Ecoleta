@@ -12,6 +12,7 @@ export const errorCodes = {
     USER_NOT_FOUND: 'USER_NOT_FOUND',
     IMAGE_UPLOAD_ERROR: 'IMAGE_UPLOAD_ERROR',
     IMAGE_COMPRESSOR_ERROR: 'IMAGE_COMPRESSOR_ERROR',
+    PAGE_NOT_FOUND: 'PAGE_NOT_FOUND',
 };
 
 export const errorMessages = {
@@ -24,6 +25,7 @@ export const errorMessages = {
     AUTH_EXPIRED_TOKEN: 'Token de autenticação expirado',
     AUTH_NO_TOKEN: 'Token de autenticação não enviado',
     USER_NOT_FOUND: 'Usuário não encontrado',
+    PAGE_NOT_FOUND: 'Página não encontrada',
 };
 
 export const responses = {
@@ -62,5 +64,9 @@ export const responses = {
     USER_NOT_FOUND: {
         errorCodes: errorCodes.USER_NOT_FOUND,
         error: errorMessages.USER_NOT_FOUND,
+    },
+    PAGE_NOT_FOUND: {
+        errorCodes: errorCodes.PAGE_NOT_FOUND,
+        error: errorMessages.PAGE_NOT_FOUND,
     },
 };

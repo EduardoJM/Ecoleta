@@ -21,6 +21,7 @@ createConnection().then(async (connection) => {
     app.use(routes);
     
     app.use('/static/avatars', express.static(path.resolve(__dirname, '..', 'static', 'avatars')));
+    app.use('/static/points', express.static(path.resolve(__dirname, '..', 'static', 'points')));
     app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
 
     //app.use(errors());

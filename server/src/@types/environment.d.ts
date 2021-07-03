@@ -9,6 +9,7 @@ declare global {
             SQL_DATABASE: string;
             JWT_SECRET: string;
             JWT_EXPIRES: string | number;
+            PAGINATION_ITEMS: number;
         }
     }
 }

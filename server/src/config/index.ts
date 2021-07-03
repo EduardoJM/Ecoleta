@@ -10,6 +10,7 @@ const config = {
     sqlDatabase: process.env.SQL_DATABASE || defaults.sqlDatabase,
     jwtSecret: process.env.JWT_SECRET || defaults.jwtSecret,
     jwtExpires: process.env.JWT_EXPIRES || defaults.jwtExpires,
+    paginationItems: process.env.PAGINATION_ITEMS || defaults.paginationItems,
 }
 
 export default config;

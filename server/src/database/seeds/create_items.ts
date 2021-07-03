@@ -1,3 +1,4 @@
+/*
 import Knex from 'knex';
 
 export async function seed(knex: Knex) {
@@ -10,3 +11,4 @@ export async function seed(knex: Knex) {
         { title: 'Óleos de Cozinha', image: 'oleo.svg', },
     ]);
 }
+*/

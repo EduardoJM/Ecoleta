@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
+    "seed": "ts-node src/seed.ts",
     "knex:migrate": "knex --knexfile knexfile.ts migrate:latest",
     "knex:seed": "knex --knexfile knexfile.ts seed:run"
   },
@@ -18,9 +19,10 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.21.1",
     "multer": "^1.4.2",
-    "sqlite3": "^4.2.0"
+    "mysql2": "^2.2.5",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.34"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -29,6 +31,7 @@
     "@types/hapi__joi": "^17.1.2",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/multer": "^1.4.3",
+    "@types/node": "^16.0.0",
     "ts-node": "^8.10.2",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.9.3"

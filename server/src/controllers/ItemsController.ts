@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
-import knex from '../database/connection';
+import { getRepository } from 'typeorm';
+import { Item } from '../entities';
 
-class ItemsController {
-    async index(request: Request, response: Response) {
+export default class ItemsController {
+    static async index(request: Request, response: Response) {
+        /*
         const items = await knex('items').select('*');
     
         const serializedItems = items.map((item) => {
@@ -14,7 +16,11 @@ class ItemsController {
         });
     
         return response.json(serializedItems);
+        */
+
+        const repository = getRepository(Item);
+        const items = await repository.find();
+
+        return response.json(items);
     }
 }
-
-export default ItemsController;

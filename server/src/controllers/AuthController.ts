@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import generateToken from '../utils/token';
+import { getRepository } from 'typeorm';
+import { User } from '../entities';
+import { httpStatusCode, outputErrors } from '../constants';
+import { generateToken } from '../utils/jwt';
 
 interface AuthRequestBody {
     email: string;
@@ -8,9 +10,31 @@ interface AuthRequestBody {
 }
 
 class AuthController {
+    static async login(request: Request<any, any, AuthRequestBody>, response: Response) {
+        const { email, password } = request.body;
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOne({ where: { email } });
+        if (!user) {
+            return response
+                .status(httpStatusCode.HTTP_400_BAD_REQUEST)
+                .json(outputErrors.responses.EMAIL_NOT_REGISTERED);
+        }
+        if (!user.checkIfUnencryptedPasswordIsValid(password)) {
+            return response
+                .status(httpStatusCode.HTTP_400_BAD_REQUEST)
+                .json(outputErrors.responses.WRONG_PASSWORD);
+        }
+        const token = generateToken({ id: user.id });
+
+        return response.send({
+            user: user.serialize(request),
+            token,
+        });
+    }
+
+    /*
     static async index(request: Request<any, any, AuthRequestBody>, response: Response) {
         const { email, password } = request.body;
-        /*
         const [point] = await knex('points').where('email', email);
         if (!point) {
             return response.status(400)
@@ -52,8 +76,8 @@ class AuthController {
             items,
             token,
         });
-        */
     }
+    */
 }
 
 export default AuthController;

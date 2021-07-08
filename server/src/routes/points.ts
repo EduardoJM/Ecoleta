@@ -12,5 +12,9 @@ router.post(
     validations.PointCreateDataValidation,
     controllers.points.create,
 );
+router.get(
+    '/point/:id',
+    controllers.points.show,
+);
 
 export default router;

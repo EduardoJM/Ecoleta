@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Request } from 'express';
 import ItemToPoint from './ItemToPoint';
+import { SerializedItem } from './Item';
 import User from "./User";
 import { buildUrl } from "../utils/urls";
 
@@ -24,6 +25,7 @@ export interface SerializedPoint {
     uf: string;
     created_at: string;
     updated_at: string;
+    items: SerializedItem[];
 }
 
 @Entity()
@@ -73,7 +75,7 @@ export default class Point {
     @ManyToOne((type) => User, (user) => user.points)
     user!: User;
 
-    @OneToMany((type) => ItemToPoint, (point) => point.item)
+    @OneToMany((type) => ItemToPoint, (point) => point.point)
     items!: ItemToPoint[];
 
     serialize(request: Request): SerializedPoint  {
@@ -89,6 +91,9 @@ export default class Point {
             uf: this.uf,
             created_at: String(this.created_at),
             updated_at: String(this.updated_at),
+            items: !this.items
+                ? []
+                : this.items.map((item) => item.item.serialize(request)),
         };
     }
 }

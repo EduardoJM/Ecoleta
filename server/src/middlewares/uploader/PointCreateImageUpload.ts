@@ -40,7 +40,6 @@ const PointCreateImageUploadMulter = multer({
         if (file.size > 1024 * 1024) {
             return callback(new Error('O arquivo deve ter, no máximo 1mb'));
         }
-        console.log(request.body.email);
         if (!request.body.email) {
             return callback(new Error('Email é necessário para criar novo ponto de coleta.'));
         }

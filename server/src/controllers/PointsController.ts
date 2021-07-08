@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
 import { getRepository } from 'typeorm';
-import { User, Point } from '../entities';
+import { User, Item, Point, ItemToPoint } from '../entities';
 import { httpStatusCode, outputErrors } from '../constants';
 
 interface PointCreateBody {
@@ -12,6 +13,11 @@ interface PointCreateBody {
     longitude: number;
     city: string;
     uf: string;
+    items: string;
+}
+
+interface PointShowParams extends ParamsDictionary {
+    id: string;
 }
 
 export default class PointsController {
@@ -31,7 +37,15 @@ export default class PointsController {
         }
 
         const {
-            image, name, email, whatsapp, latitude, longitude, city, uf,
+            image,
+            name,
+            email,
+            whatsapp,
+            latitude,
+            longitude,
+            city,
+            uf,
+            items,
         } = request.body;
 
         const pointRepo = getRepository(Point);
@@ -49,14 +63,60 @@ export default class PointsController {
         try {
             const result = await pointRepo.save(point);
 
+            const itemRepo = getRepository(Item);
+
+            const ids = items
+                .split(',')
+                .map((item) => item.trim())
+                .map((item) => parseInt(item, 10));
+            const itemMapRepo = getRepository(ItemToPoint);
+            for (let i = 0; i < ids.length; i += 1) {
+                const toMap = await itemRepo.findOne({ where: { id: ids[i] }});
+                if (toMap) {
+                    const reg = new ItemToPoint();
+                    reg.point = result;
+                    reg.item = toMap;
+                    await itemMapRepo.save(reg);
+                }
+            }
+
+            const selectResult = await pointRepo.findOne({
+                where: { id: result.id },
+                relations: ['items', 'items.item'],
+            });
+            if (!selectResult) {
+                return response
+                    .status(httpStatusCode.HTTP_201_CREATED)
+                    .json(result.serialize(request));
+            }
             return response
-                .status(httpStatusCode.HTTP_201_CREATED)
-                .json(result.serialize(request));
+                    .status(httpStatusCode.HTTP_201_CREATED)
+                    .json(selectResult.serialize(request));
         } catch (err) {
             return response
                 .status(httpStatusCode.HTTP_500_INTERNAL_SERVER_ERROR)
                 .json(outputErrors.responses.UNKNOWN_SAVE_ERROR);
         }
+    }
+
+    static async show(request: Request<PointShowParams, any, any>, response: Response) {
+        const { id } = request.params;
+        if (!id) {
+            return response
+                .status(httpStatusCode.HTTP_404_NOT_FOUND)
+                .json(outputErrors.responses.POINT_NOT_FOUND);
+        }
+        const pointRepo = getRepository(Point);
+        const point = await pointRepo.findOne({
+            where: { id },
+            relations: ['items', 'items.item']
+        });
+        if (!point) {
+            return response
+                .status(httpStatusCode.HTTP_404_NOT_FOUND)
+                .json(outputErrors.responses.POINT_NOT_FOUND);
+        }
+        return response.json(point.serialize(request));
     }
 
 
@@ -133,77 +193,6 @@ export default class PointsController {
             .select('items.title');
         
         return response.json({ point: serializedPoint, items });
-    }
-
-    async create(request: Request, response: Response) {
-        const {
-            name,
-            email,
-            password,
-            whatsapp,
-            latitude,
-            longitude,
-            city,
-            uf,
-            items,
-        } = request.body;
-        // make the e-mail as unique
-        const hasSameEmail = await knex('points').where('email', email);
-        if (hasSameEmail.length > 0) {
-            return response.status(400)
-                .json({
-                    error: true,
-                    information: {
-                        in: 'create_point',
-                        code: 'EMAIL_ALREADY_REGISTERED',
-                        message: 'Only one point per e-mail permited.',
-                    },
-                });
-        }
-        // create the password hash 
-        const passwordHash = await bcrypt.hash(password, 10);
-        // initialize the knex transaction
-        const trx = await knex.transaction();
-
-        const point = {
-            image: request.file.filename,
-            name,
-            email,
-            password: passwordHash,
-            whatsapp,
-            latitude,
-            longitude,
-            city,
-            uf,
-        };
-
-        const insertedIds = await trx('points').insert(point);
-        const pointId = insertedIds[0];
-    
-        const pointItems = items
-            .split(',')
-            .map((item: string) => Number(item.trim()))
-            .map((itemId: number) => {
-                return {
-                    item_id: itemId,
-                    point_id: pointId,
-                }
-            });
-    
-        await trx('point_items').insert(pointItems);
-
-        await trx.commit();
-
-        const token = generateToken({ id: pointId });
-    
-        return response.json({
-            point: {
-                id: pointId,
-                ... point,
-                password: undefined,
-            },
-            token,
-        });
     }
 
     async update(request: Request, response: Response) {

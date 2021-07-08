@@ -10,6 +10,7 @@ const PointCreateDataValidation = celebrate({
         longitude: Joi.number().required(),
         city: Joi.string().required(),
         uf: Joi.string().required(),
+        items: Joi.string().regex(/(\d+( *, *)*)*/i).required(),
     }),
 }, {
     abortEarly: false,

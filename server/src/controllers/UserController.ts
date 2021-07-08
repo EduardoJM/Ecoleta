@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ParamsDictionary } from 'express-serve-static-core';
+import { Query } from 'express-serve-static-core';
 import { getRepository } from 'typeorm';
 import { Point, User } from '../entities';
 import { httpStatusCode, outputErrors } from '../constants';
@@ -12,12 +12,12 @@ interface UserCreateRequestBody {
     avatar: string;
 }
 
-interface UserPointsRequestParams extends ParamsDictionary {
+interface UserPointsRequestParams extends Query {
     page: string;
 }
 
 export default class UserController {
-    static async points(request: Request<UserPointsRequestParams, any, any>, response: Response) {
+    static async points(request: Request<any, any, any, UserPointsRequestParams>, response: Response) {
         if (!request.user) {
             return response
                 .status(httpStatusCode.HTTP_400_BAD_REQUEST)
@@ -33,8 +33,8 @@ export default class UserController {
             pages = 1;
         }
         let page = 1;
-        if (request.params.page) {
-            page = parseInt(request.params.page, 10);
+        if (request.query.page) {
+            page = parseInt(request.query.page, 10);
             if (page <= 0 || page > pages) {
                 return response
                     .status(httpStatusCode.HTTP_404_NOT_FOUND)
@@ -43,6 +43,7 @@ export default class UserController {
         }
         const results = await pointsRepo.find({
             where: { user: request.user.id },
+            relations: ['items', 'items.item'],
             skip: (page - 1) * config.paginationItems,
             take: config.paginationItems,
         });
@@ -51,7 +52,7 @@ export default class UserController {
             results: results.map((item) => item.serialize(request)),
             page,
             pagesCount: pages,
-        })
+        });
     }
 
     static async create(request: Request<any, any, UserCreateRequestBody>, response: Response) {

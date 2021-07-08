@@ -31,7 +31,7 @@ export default class Item {
     serialize(request: Request) : SerializedItem  {
         return {
             id: this.id,
-            image: buildUrl(request, `uploads/${this.image}`),
+            image: buildUrl(request, `static/items/${this.image}`),
             title: this.title,
         };
     }

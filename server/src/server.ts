@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 //import { errors } from 'celebrate';
-//import errorHandler from './middlewares/errorHandler';
 import createConnection from './connection';
 import config from './config';
 import routes from './routes';
@@ -22,10 +21,9 @@ createConnection().then(async (connection) => {
     
     app.use('/static/avatars', express.static(path.resolve(__dirname, '..', 'static', 'avatars')));
     app.use('/static/points', express.static(path.resolve(__dirname, '..', 'static', 'points')));
-    app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
+    app.use('/static/items', express.static(path.resolve(__dirname, '..', 'static', 'items')));
 
     //app.use(errors());
-    //app.use(errorHandler);
-
+    
     app.listen(config.port);
 });

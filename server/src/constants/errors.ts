@@ -13,6 +13,7 @@ export const errorCodes = {
     IMAGE_UPLOAD_ERROR: 'IMAGE_UPLOAD_ERROR',
     IMAGE_COMPRESSOR_ERROR: 'IMAGE_COMPRESSOR_ERROR',
     PAGE_NOT_FOUND: 'PAGE_NOT_FOUND',
+    POINT_NOT_FOUND: 'POINT_NOT_FOUND',
 };
 
 export const errorMessages = {
@@ -26,6 +27,7 @@ export const errorMessages = {
     AUTH_NO_TOKEN: 'Token de autenticação não enviado',
     USER_NOT_FOUND: 'Usuário não encontrado',
     PAGE_NOT_FOUND: 'Página não encontrada',
+    POINT_NOT_FOUND: 'Ponto não encontrado',
 };
 
 export const responses = {
@@ -68,5 +70,9 @@ export const responses = {
     PAGE_NOT_FOUND: {
         errorCodes: errorCodes.PAGE_NOT_FOUND,
         error: errorMessages.PAGE_NOT_FOUND,
+    },
+    POINT_NOT_FOUND: {
+        errorCodes: errorCodes.POINT_NOT_FOUND,
+        error: errorMessages.POINT_NOT_FOUND,
     },
 };

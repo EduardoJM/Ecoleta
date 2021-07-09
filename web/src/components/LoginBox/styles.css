@@ -1,0 +1,9 @@
+form.login-box {
+    padding: 30px;
+    margin: 30px auto;
+    max-width: 500px;
+}
+
+form.login-box fieldset {
+    margin-top: 0;
+}

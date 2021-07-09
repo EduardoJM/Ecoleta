@@ -5,7 +5,7 @@ import { Route, BrowserRouter, Switch } from 'react-router-dom';
 
 import Home from './pages/Home';
 //import Points from './pages/Points';
-import CreatePoint from './pages/CreatePoint';
+import CreatePoint from './pages/CreatePoint/CreatePoint';
 //import SignIn from'./pages/SignIn';
 //import PointDashboard from './pages/PointDashboard';
 

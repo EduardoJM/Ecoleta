@@ -30,3 +30,10 @@ export function setUserData(user: UserData): AuthAction<'AuthSetUserData'> {
         payload: user,
     };
 }
+
+export function requestLogin(email: string, password: string): AuthAction<'AuthRequestLogin'> {
+    return {
+        type: 'AuthRequestLogin',
+        payload: { email, password },
+    };
+}

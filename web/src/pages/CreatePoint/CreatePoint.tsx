@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Store, actions } from '../../redux';
 import { useHistory } from 'react-router-dom';
 import Header from '../../components/Header';
@@ -15,11 +15,11 @@ const CreatePoint: React.FC = () => {
     const { user } = useSelector((store: Store) => store.auth);
     const logged = useMemo(() => user !== null, [user]);
     const history = useHistory();
+    const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         whatsapp: '',
-        password: '',
     });
 
     const [ufs, setUfs] = useState<string[]>([]);
@@ -76,12 +76,24 @@ const CreatePoint: React.FC = () => {
         setSelectedCity(city);*/
     }
 
+    function handleImageSelect(file: File) {
+        if (file.size >= 1048576) {
+            dispatch(actions.global.pushMessage('Tamanho do arquivo deve ser no máximo de 1mb.'));
+            return false;
+        }
+        setSelectedFile(file);
+        return true;
+    }
+
     return (
         <div className="page-content">
             <Header />
 
             <form className="styled" onSubmit={handleSubmit}>
                 <h1>Cadastro do<br/> ponto de coleta</h1>
+
+                <Dropzone onFileUploaded={handleImageSelect} />
+
                 <fieldset>
                     <legend>
                         <h2>Dados</h2>
@@ -118,17 +130,6 @@ const CreatePoint: React.FC = () => {
                             />
                             <span className="info">O whatsapp deve conter apenas números, com 11 digitos (Os dois primeiros são o DDD e os outros 9 são o número).</span>
                         </div>
-                    </div>
-
-                    <div className="field">
-                        <label htmlFor="password">Senha</label>
-                        <input
-                            type="password"
-                            name="password"
-                            id="password"
-                            onChange={handleInputChange}
-                        />
-                        <span className="info">Sua senha será necessária para a alteração de dados ou para a exclusão do ponto de coleta de nossas listas.</span>
                     </div>
                 </fieldset>
 

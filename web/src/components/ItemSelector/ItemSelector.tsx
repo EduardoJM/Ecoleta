@@ -1,37 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { actions, Store } from '../../redux';
 
-import api from '../../services/api';
-
-interface Item {
-    id: number;
-    title: string;
-    image_url: string;
-}
+import './styles.css';
 
 interface ItemSelectorProps {
     selectedItems: number[];
     setSelectedItems: (selectedItems: number[]) => void;
-    handleError?: (message: string) => void;
 }
 
 const ItemSelector: React.FC<ItemSelectorProps> = ({
     selectedItems,
     setSelectedItems,
-    handleError,
 }) => {
-    const [items, setItems] = useState<Item[]>([]);
+    const items = useSelector((store: Store) => store.items);
+    const dispatch = useDispatch();
     
     useEffect(() => {
-        api.get('items').then((response) => {
-            if (response.status !== 200) {
-                if (handleError) {
-                    handleError('Não foi possível carregar os itens.');
-                }
-                return;
-            }
-            setItems(response.data);
-        });
-    }, [handleError]);
+        dispatch(actions.items.requestItems());
+    }, [dispatch]);
 
     function handleSelectItem(id: number) {
         const alreadySelected = selectedItems.includes(id);
@@ -57,7 +44,7 @@ const ItemSelector: React.FC<ItemSelectorProps> = ({
                         key={item.id}
                         onClick={() => handleSelectItem(item.id)}
                     >
-                        <img src={item.image_url} alt={item.title} />
+                        <img src={item.image} alt={item.title} />
                         <span>{item.title}</span>
                     </li>
                 ))}

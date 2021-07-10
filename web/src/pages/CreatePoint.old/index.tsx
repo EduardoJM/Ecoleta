@@ -293,7 +293,6 @@ const CreatePoint = () => {
                 <ItemSelector
                     selectedItems={selectedItems}
                     setSelectedItems={setSelectedItems}
-                    handleError={(message) => setErrorData({ error: true, message})}
                 />
 
                 <button type="submit">

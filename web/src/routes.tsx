@@ -5,7 +5,7 @@ import { Route, BrowserRouter, Switch } from 'react-router-dom';
 
 import Home from './pages/Home';
 //import Points from './pages/Points';
-import CreatePoint from './pages/CreatePoint/CreatePoint';
+import { CreatePoint, Login } from './pages';
 //import SignIn from'./pages/SignIn';
 //import PointDashboard from './pages/PointDashboard';
 
@@ -16,6 +16,7 @@ const Routes = () => {
         <BrowserRouter>
             <Switch>
                 <Route component={Home} path="/" exact />
+                <Route component={Login} path="/login" exact />
                 <Route component={CreatePoint} path = "/point/new" exact />
                 {/*
                 <Route component={Points} path="/points/:uf/:city" />

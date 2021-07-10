@@ -1,6 +1,8 @@
 import React, { FormEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useLocation, useHistory } from 'react-router-dom';
 import { actions } from '../../redux';
+import { parseSearch } from '../../utils/search';
 
 import './styles.css';
 
@@ -8,10 +10,20 @@ const LoginBox: React.FC = () => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { search } = useLocation();
+    const history = useHistory();
 
     function handleSignIn(e: FormEvent) {
         e.preventDefault();
-        dispatch(actions.auth.requestLogin(email, password));
+        const parsed = parseSearch(search);
+        if (Object.prototype.hasOwnProperty.call(parsed, 'next')) {
+            dispatch(actions.auth.requestLogin(email, password, {
+                next: parsed['next'],
+                history,
+            }));
+        } else {
+            dispatch(actions.auth.requestLogin(email, password));
+        }
     };
 
     return (

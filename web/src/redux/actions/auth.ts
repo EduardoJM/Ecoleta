@@ -1,5 +1,6 @@
 import { Action } from 'redux';
 import { UserData } from '../../types';
+import { History } from 'history';
 
 export interface AuthActionSetUserDataPayload extends UserData {
 }
@@ -9,6 +10,10 @@ export interface AuthActionTypePayloadMap {
     'AuthRequestLogin': {
         email: string;
         password: string;
+        route?: {
+            next: string;
+            history: History;
+        }
     };
     'AuthRequestLogout': null;
 }
@@ -31,9 +36,16 @@ export function setUserData(user: UserData): AuthAction<'AuthSetUserData'> {
     };
 }
 
-export function requestLogin(email: string, password: string): AuthAction<'AuthRequestLogin'> {
+export function requestLogin(
+    email: string,
+    password: string,
+    route?: {
+        next: string;
+        history: History;
+    }
+): AuthAction<'AuthRequestLogin'> {
     return {
         type: 'AuthRequestLogin',
-        payload: { email, password },
+        payload: { email, password, route },
     };
 }

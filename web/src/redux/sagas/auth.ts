@@ -12,6 +12,9 @@ function* login(action: AuthAction<'AuthRequestLogin'>) {
         api.axios.defaults.headers.Authorization = `Bearer ${response.token}`;
         localStorage.setItem('@Ecoleta_authorization_token', response.token);
         yield put(actions.auth.setUserData(response.user));
+        if (action.payload.route) {
+            action.payload.route.history.push(action.payload.route.next);
+        }
     } catch (err) {
         yield put(actions.global.pushMessage(displayAPIError(err)));
     } finally {

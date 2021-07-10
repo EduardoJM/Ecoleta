@@ -2,14 +2,8 @@ import React, { useMemo } from 'react';
 import { animated, useTransition } from 'react-spring';
 import { useSelector, useDispatch } from 'react-redux';
 import { Store, actions } from '../../redux';
-import { MessageTimout } from '../../config';
+import { MessageHubSpring, MessageTimout } from '../../config';
 import { MdClose } from 'react-icons/md';
-
-const springConfig = {
-    tension: 125,
-    friction: 20,
-    precision: 0.1,
-};
 
 const MessageHub: React.FC = () => {
     const { messages } = useSelector((store: Store) => store.global);
@@ -29,7 +23,7 @@ const MessageHub: React.FC = () => {
         onRest: (result, ctrl, item) => {
             dispatch(actions.global.popMessage(item.key));
         },
-        config: (item, index, phase) => key => (phase === 'enter' && key === 'life' ? { duration: MessageTimout } : springConfig),
+        config: (item, index, phase) => key => (phase === 'enter' && key === 'life' ? { duration: MessageTimout } : MessageHubSpring),
     });
 
     return (

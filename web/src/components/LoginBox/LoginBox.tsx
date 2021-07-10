@@ -18,8 +18,7 @@ const LoginBox: React.FC = () => {
         <form className="styled login-box" onSubmit={handleSignIn}>
             <fieldset>
                 <legend>
-                    <h2>Logar</h2>
-                    <span>Faça login para poder alterar seus dados cadastrais ou excluir seu ponto de coleta da nossa listagem.</span>
+                    <h2>Entrar</h2>
                 </legend>
 
                 <div className="field">

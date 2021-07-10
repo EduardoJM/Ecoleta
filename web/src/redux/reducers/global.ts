@@ -20,13 +20,19 @@ export default function globalReducer(
             ...state,
             messages: [
                 ...state.messages,
-                action.payload,
+                {
+                    message: action.payload,
+                    key: state.nextKey,
+                },
             ],
+            nextKey: state.nextKey + 1,
         };
     } else if (action.type === 'GlobalPopMessage') {
         return {
             ...state,
-            messages: state.messages.filter((_, index) => index !== 0),
+            messages: state.messages.filter(
+                (item) => item.key !== action.payload.key
+            ),
         };
     }
     return state;

@@ -4,7 +4,9 @@ export interface GlobalActionTypePayloadMap {
     'GlobalPushLoading': null;
     'GlobalPopLoading': null;
     'GlobalPushMessage': string;
-    'GlobalPopMessage': null;
+    'GlobalPopMessage': {
+        key: number;
+    };
 }
 
 export interface GlobalAction<K extends keyof GlobalActionTypePayloadMap> extends Action<K> {
@@ -31,6 +33,6 @@ export function pushMessage(message: string): GlobalAction<'GlobalPushMessage'> 
     return { type: 'GlobalPushMessage', payload: message };
 }
 
-export function popMessage(): GlobalAction<'GlobalPopMessage'> {
-    return { type: 'GlobalPopMessage', payload: null };
+export function popMessage(key: number): GlobalAction<'GlobalPopMessage'> {
+    return { type: 'GlobalPopMessage', payload: { key } };
 };

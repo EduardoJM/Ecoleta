@@ -2,6 +2,7 @@ import { all, takeLatest, call, put } from 'redux-saga/effects';
 import { actions, AuthAction } from '../actions';
 import { UserAuthenticatedData } from '../../types';
 import { api } from '../../services';
+import { displayAPIError } from '../../utils/errors';
 
 function* login(action: AuthAction<'AuthRequestLogin'>) {
     const { email, password } = action.payload;
@@ -12,10 +13,7 @@ function* login(action: AuthAction<'AuthRequestLogin'>) {
         localStorage.setItem('@Ecoleta_authorization_token', response.token);
         yield put(actions.auth.setUserData(response.user));
     } catch (err) {
-        console.log(JSON.stringify(err.response, null, 3));
-        let errorMessage = "Ops! Tivemos um erro desconhecido!";
-        // TODO: get error from "err";
-        yield put(actions.global.pushMessage(errorMessage));
+        yield put(actions.global.pushMessage(displayAPIError(err)));
     } finally {
         yield put(actions.global.popLoading());
     }

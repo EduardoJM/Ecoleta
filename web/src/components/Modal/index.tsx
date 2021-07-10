@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FiX } from 'react-icons/fi';
-import { useTransition, animated } from 'react-spring';
+//import { useTransition, animated } from 'react-spring';
 
 import './styles.css';
 
@@ -26,15 +26,17 @@ const Modal: React.FC<ModalProps> = ({
     handleClose,
     hasCloseButton
 }) => {
+    /*
     const modalTransition = useTransition(opened, null, {
         from: { opacity: 0 },
         enter: { opacity: 1 },
         leave: { opacity: 0 }
     });
+    */
 
     return (
         <>
-            {modalTransition.map(
+            {/*modalTransition.map(
                 ({ item, key, props }) => item && (
                     <animated.div
                         className="overlay"
@@ -49,7 +51,7 @@ const Modal: React.FC<ModalProps> = ({
                         {children}
                     </animated.div>
                 )
-            )}
+            )*/}
         </>
     );
 };

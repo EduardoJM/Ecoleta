@@ -1,11 +1,13 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Store } from '../../redux';
+import MessageHub from './MessageHub';
 
 import './styles.css';
 
 const GlobalDisplay: React.FC = () => {
     const { loadingCount } = useSelector((store: Store) => store.global);
+    
 
     return (
         <>
@@ -16,6 +18,7 @@ const GlobalDisplay: React.FC = () => {
                     </div>
                 </div>
             )}
+            <MessageHub />
         </>
     );
 };

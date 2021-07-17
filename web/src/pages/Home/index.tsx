@@ -5,7 +5,7 @@ import { Link, useHistory } from 'react-router-dom';
 // import local components/hooks
 import Modal, { useModal } from '../../components/Modal';
 // import services
-import { getUfs, getCities } from '../../services/ibge';
+//import { getUfs, getCities } from '../../services/ibge';
 // import assets
 import logo from '../../assets/logo.svg';
 import './styles.css';
@@ -20,16 +20,16 @@ const Home = () => {
     const history = useHistory();
 
     useEffect(() => {
-        getUfs((result) => {
+        /*getUfs((result) => {
             if (result.error) {
                 return;
             }
             setUfs(result.ufs);
-        });
+        });*/
     }, []);
 
     useEffect(() => {
-        if (selectedUf === '0') {
+        /*if (selectedUf === '0') {
             return;
         }
         getCities(selectedUf, (result) => {
@@ -37,7 +37,7 @@ const Home = () => {
                 return;
             }
             setCities(result.cities);
-        });
+        });*/
     }, [selectedUf]);
 
     function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
@@ -70,7 +70,7 @@ const Home = () => {
                         <h1>Seu marketplace de coleta de resíduos.</h1>
                         <p>Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente.</p>
 
-                        <Link className="button" to="/create-point">
+                        <Link className="button" to="/point/new">
                             <span>
                                 <FiLogIn />
                             </span>

@@ -4,7 +4,7 @@ import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
 import { FiCheckCircle, FiXCircle } from 'react-icons/fi';
 
-import { getUfs, getCities } from '../../services/ibge';
+//import { getUfs, getCities } from '../../services/ibge';
 import { useAuth } from '../../contexts/auth';
 import api from '../../services/api';
 
@@ -68,7 +68,7 @@ const PointDashboard = () => {
     const [ selectedFile, setSelectedFile ] = useState<File>();
     
     useEffect(() => {
-        getUfs((result) => {
+        /*getUfs((result) => {
             if (result.error) {
                 setErrorData({
                     error: true,
@@ -77,11 +77,11 @@ const PointDashboard = () => {
                 return;
             }
             setUfs(result.ufs);
-        });
+        });*/
     }, []);
 
     useEffect(() => {
-        getCities(formData.uf, (result) => {
+        /*getCities(formData.uf, (result) => {
             if (result.error) {
                 setErrorData({
                     error: true,
@@ -90,7 +90,7 @@ const PointDashboard = () => {
                 return;
             }
             setCities(result.cities);
-        });
+        });*/
     }, [formData.uf]);
 
     const history = useHistory();

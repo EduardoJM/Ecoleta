@@ -12,7 +12,7 @@ import Dropzone from '../../components/Dropzone';
 import ItemSelector from '../../components/ItemSelector';
 import Modal, { useModal } from '../../components/Modal';
 // import services
-import { getUfs, getCities } from '../../services/ibge';
+//import { getUfs, getCities } from '../../services/ibge';
 import api from '../../services/api';
 // import assets
 import './styles.css';
@@ -57,7 +57,7 @@ const CreatePoint = () => {
     }, []);
     
     useEffect(() => {
-        getUfs((result) => {
+        /*getUfs((result) => {
             if (result.error) {
                 setErrorData({
                     error: true,
@@ -66,11 +66,11 @@ const CreatePoint = () => {
                 return;
             }
             setUfs(result.ufs);
-        });
+        });*/
     }, []);
 
     useEffect(() => {
-        if (selectedUf === '0') {
+        /*if (selectedUf === '0') {
             return;
         }
         getCities(selectedUf, (result) => {
@@ -82,7 +82,7 @@ const CreatePoint = () => {
                 return;
             }
             setCities(result.cities);
-        });
+        });*/
     }, [selectedUf]);
 
     function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {

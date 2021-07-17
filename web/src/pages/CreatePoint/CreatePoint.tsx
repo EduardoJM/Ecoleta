@@ -7,6 +7,7 @@ import Dropzone from '../../components/Dropzone';
 import ItemSelector from '../../components/ItemSelector';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
+import { retrieveUFs, retrieveCities } from '../../services/ibge';
 
 // TODO: remove this style and make it global
 import '../styles/pages.css';
@@ -33,7 +34,6 @@ const CreatePoint: React.FC = () => {
     const [selectedFile, setSelectedFile] = useState<File>();
 
     useEffect(() => {
-        console.log(logged);
         if (!logged) {
             history.push("/login?next=/point/new");
         }
@@ -45,6 +45,33 @@ const CreatePoint: React.FC = () => {
             setInitialPosition([latitude, longitude]);
         });
     }, []);
+
+    useEffect(() => {
+        dispatch(actions.global.pushLoading());
+        retrieveUFs((error, result) => {
+            dispatch(actions.global.popLoading());
+            if (error) {
+                dispatch(actions.global.pushMessage(error));
+            } else if (result) {
+                setUfs(result);
+            }
+        });
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (selectedUf === '0') {
+            return;
+        }
+        dispatch(actions.global.pushLoading());
+        retrieveCities(selectedUf, (error, result) => {
+            dispatch(actions.global.popLoading());
+            if (error) {
+                dispatch(actions.global.pushMessage(error));
+            } else if (result) {
+                setCities(result);
+            }
+        });
+    }, [selectedUf, dispatch]);
 
     if (!logged) {
         return <></>;
@@ -67,18 +94,18 @@ const CreatePoint: React.FC = () => {
     }
 
     function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
-        /*const uf = event.target.value;
-        setSelectedUf(uf);*/
+        const uf = event.target.value;
+        setSelectedUf(uf);
     }
 
     function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
-        /*const city = event.target.value;
-        setSelectedCity(city);*/
+        const city = event.target.value;
+        setSelectedCity(city);
     }
 
     function handleImageSelect(file: File) {
         if (file.size >= 1048576) {
-            dispatch(actions.global.pushMessage('Tamanho do arquivo deve ser no máximo de 1mb.'));
+            dispatch(actions.global.pushMessage('Tamanho do arquivo deve ser de, no máximo, 1 MB.'));
             return false;
         }
         setSelectedFile(file);

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Map, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
 import { Point } from '../../types';
 import PointItem from './Point';
-import { PointsNotFound, PointsGrid } from './styles';
+import { PointsNotFound, PointsGrid, PreviewMapContainer } from './styles';
+import Modal from '../Modal';
 
 interface PointsListProps {
     points: Point[];
@@ -10,8 +12,14 @@ interface PointsListProps {
 const PointsList: React.FC<PointsListProps> = (props) => {
     const { points } = props;
 
-    function handleViewMap(point: Point) {
+    const [viewingOnMap, setViewingOnMap] = useState<Point | null>(null);
 
+    function handleViewMap(point: Point) {
+        setViewingOnMap(point);
+    }
+
+    function handleCloseModal() {
+        setViewingOnMap(null);
     }
 
     if (points.length === 0) {
@@ -24,11 +32,36 @@ const PointsList: React.FC<PointsListProps> = (props) => {
     }
 
     return (
-        <PointsGrid>
-            {points.map((point) => (
-                <PointItem key={point.id} point={point} onViewMap={handleViewMap} />
-            ))}
-        </PointsGrid>
+        <>
+            <PointsGrid>
+                {points.map((point) => (
+                    <PointItem key={point.id} point={point} onViewMap={handleViewMap} />
+                ))}
+            </PointsGrid>
+            <Modal
+                opened={viewingOnMap !== null}
+                handleClose={handleCloseModal}
+                hasCloseButton={true}
+            >
+                {viewingOnMap && (
+                    <PreviewMapContainer>
+                        <Map
+                            center={[viewingOnMap.latitude, viewingOnMap.longitude]}
+                            zoom={15}
+                        >
+                            <TileLayer
+                                attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            <Marker position={[viewingOnMap.latitude, viewingOnMap.longitude]}>
+                                <Popup>{viewingOnMap.name}</Popup>
+                                <Tooltip>{viewingOnMap.name}</Tooltip>
+                            </Marker>
+                        </Map>
+                    </PreviewMapContainer>
+                )}
+            </Modal>
+        </>
     );
 };
 

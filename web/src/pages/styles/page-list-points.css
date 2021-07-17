@@ -1,0 +1,142 @@
+.page-list-points {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+    padding-bottom: 50px;
+}
+
+.page-list-points .content {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: 20px;
+}
+
+.page-list-points span {
+    margin-bottom: 10px;
+}
+
+.page-list-points .items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-start;
+}
+
+.page-list-points .items .item {
+    flex: 0 0 33.33%;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+.page-list-points .items .item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.page-list-points .items .item h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.page-list-points .items .item h3 {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.page-list-points .items .item p {
+    margin-bottom: 20px;
+}
+
+.page-list-points .items .item .fake-link {
+    color: var(--title-color);
+    cursor: pointer;
+}
+
+.page-list-points .items .item .contact {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-list-points .items .item .contact .button {
+    flex: 0 0 calc(50% - 20px);
+    height: 50px;
+    background: var(--primary-color);
+    border-radius: 8px;
+    text-decoration: none;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: #FFF;
+}
+
+.page-list-points .items .item .contact .button svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.page-list-points .items .item .contact .button:hover {
+    background: #2FB86E;
+    cursor: pointer;
+}
+
+.page-list-points .items .item-map {
+    width: 100%;
+    padding: 10px;
+    height: 300px;
+    margin-bottom: 30px;
+}
+
+.page-list-points .items .item-map .leaflet-container{
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+}
+
+.page-list-points .items .close-map {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.page-list-points .items .close-map span {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.page-list-points .items .close-map span svg {
+    margin-left: 5px;
+}
+
+.page-list-points .loading-indicator,
+.page-list-points .not-items-indicator {
+    min-height: 300px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+@media(max-width: 900px) {
+    .page-list-points .items .item {
+        flex: 0 0 50%;
+    }
+}
+
+@media(max-width: 600px) {
+    .page-list-points .items .item {
+        flex: 0 0 100%;
+    }
+}

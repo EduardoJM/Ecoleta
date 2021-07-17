@@ -1,6 +1,6 @@
 import { Action } from 'redux';
-import { UserData } from '../../types';
 import { History } from 'history';
+import { UserData } from '../../types';
 
 export interface AuthActionSetUserDataPayload extends UserData {
 }

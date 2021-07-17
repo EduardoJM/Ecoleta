@@ -16,6 +16,7 @@ import '../styles/pages.css';
 
 const CreatePoint: React.FC = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -128,23 +129,25 @@ const CreatePoint: React.FC = () => {
                 longitude,
                 items,
             });
+            if (validationResult) {
+                const data = new FormData();
+                data.append('name', validationResult.name);
+                data.append('email', validationResult.email);
+                data.append('whatsapp', validationResult.whatsapp);
+                data.append('uf', validationResult.uf);
+                data.append('city', validationResult.city);
+                data.append('latitude', String(validationResult.latitude));
+                data.append('longitude', String(validationResult.longitude));
+                data.append('items', items.join(','));
+                data.append('image', selectedFile);
 
-            const data = new FormData();
-            data.append('name', name);
-            data.append('email', email);
-            data.append('whatsapp', whatsapp);
-            data.append('uf', uf);
-            data.append('city', city);
-            data.append('latitude', String(latitude));
-            data.append('longitude', String(longitude));
-            data.append('items', items.join(','));
-            data.append('image', selectedFile);
-
-            // TODO: dispatch here.
+                dispatch(actions.user.requestCreatePoint(data, history));
+            }
         } catch(err) {
-            dispatch(actions.global.popLoading());
             dispatch(actions.global.pushMessage(displayValidationError(err)));
             return;
+        } finally {
+            dispatch(actions.global.popLoading());
         }
     }
 

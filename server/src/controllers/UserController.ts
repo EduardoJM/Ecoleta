@@ -89,4 +89,22 @@ export default class UserController {
                 .json(outputErrors.responses.UNKNOWN_SAVE_ERROR);
         }
     }
+
+    static async getMyData(request: Request, response: Response) {
+        if (!request.user) {
+            return response
+                .status(httpStatusCode.HTTP_400_BAD_REQUEST)
+                .json(outputErrors.responses.USER_NOT_FOUND);
+        }
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOne({ where: { id: request.user.id } });
+        if (!user) {
+            return response
+                .status(httpStatusCode.HTTP_400_BAD_REQUEST)
+                .json(outputErrors.responses.USER_NOT_FOUND);
+        }
+        return response.send({
+            ...user.serialize(request),
+        });
+    }
 }

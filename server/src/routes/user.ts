@@ -13,6 +13,12 @@ router.post(
 );
 
 router.get(
+    '/user',
+    auth.IsUserAuthenticated,
+    controllers.user.getMyData,
+);
+
+router.get(
     '/user/points',
     auth.IsUserAuthenticated,
     controllers.user.points,

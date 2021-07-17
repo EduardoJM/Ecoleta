@@ -8,6 +8,7 @@ import { actions, Store } from '../../redux';
 import Header from '../../components/Header';
 
 import '../styles/page-list-points.css';
+import PointsList from '../../components/PointsList';
 
 const UserPoints: React.FC = () => {
     const dispatch = useDispatch();
@@ -46,7 +47,9 @@ const UserPoints: React.FC = () => {
                 <span>Mostrando seus pontos de coleta.</span>
             </div>
 
-            {points.length === 0 ? (
+            <PointsList points={points} />
+
+            {/*points.length === 0 ? (
                 <div className="not-items-indicator">
                     <h2>Ops!</h2>
                     <span>Ainda não tempos pontos de coleta cadastrados nessa cidade!</span>
@@ -95,7 +98,7 @@ const UserPoints: React.FC = () => {
                         </React.Fragment>
                     ))}
                 </div>
-            )}
+            )*/}
 
             {currentPage !== pagesCount && (
                 <span>TODO: Escrever Paginação Aqui</span>

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 //import NotFound from './pages/NotFound';
 
@@ -11,7 +12,15 @@ import { CreatePoint, Login } from './pages';
 
 //import { AuthProvider } from './contexts/auth';
 
+import { actions } from './redux'
+
 const Routes = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(actions.auth.requestCheckIfLogged());
+    }, [dispatch]);
+
     return (
         <BrowserRouter>
             <Switch>

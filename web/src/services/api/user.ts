@@ -1,5 +1,5 @@
 import api from './axios';
-import { UserAuthenticatedData } from '../../types';
+import { UserAuthenticatedData, UserData } from '../../types';
 
 export function createUser(data: FormData) {
     return api
@@ -11,4 +11,8 @@ export function loginUser(email: string, password: string) : Promise<UserAuthent
     return api
         .post<UserAuthenticatedData>('/auth', { email, password })
         .then((response) => response.data);
+}
+
+export function getMyData() {
+    return api.get<UserData>('/user').then(response => response.data);
 }

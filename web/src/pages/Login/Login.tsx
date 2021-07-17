@@ -1,8 +1,8 @@
-import React, { FormEvent, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { FormEvent, useState, useMemo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useHistory } from 'react-router-dom';
 import Header from '../../components/Header';
-import { actions } from '../../redux';
+import { actions, Store } from '../../redux';
 import { parseSearch } from '../../utils/search';
 
 import '../styles/pages.css';
@@ -10,6 +10,9 @@ import './styles.css';
 
 const Login: React.FC = () => {
     const dispatch = useDispatch();
+    const { user } = useSelector((store: Store) => store.auth);
+    const logged = useMemo(() => user !== null, [user]);
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { search } = useLocation();
@@ -27,6 +30,12 @@ const Login: React.FC = () => {
             dispatch(actions.auth.requestLogin(email, password));
         }
     };
+
+    useEffect(() => {
+        if (logged) {
+            history.push('/user');
+        }
+    }, [logged, history]);
 
     return (
         <div className="page-content">

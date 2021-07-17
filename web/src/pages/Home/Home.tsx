@@ -78,11 +78,11 @@ const Home = () => {
                         <p>
                             Ou <span className="fake-link" onClick={cityModal.open}>encontre um ponto próximo de você</span>. {logged ? (
                                 <>
-                                    Você pode, também, <Link to="/user">alterar seus dados</Link>.
+                                    Você pode, também, <Link to="/user">ver seu pefil, pontos ou alterar dados</Link>.
                                 </>
                             ) : (
                                 <>
-                                    Você pode, também, <Link to="/login">entrar para alterar seus dados</Link>.
+                                    Você pode, também, <Link to="/login">entrar para ver seu perfil, pontos ou alterar dados</Link>.
                                 </>
                             )}
                         </p>

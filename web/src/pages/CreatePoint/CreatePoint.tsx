@@ -1,6 +1,6 @@
-import React, { useEffect, useState, ChangeEvent, FormEvent, useMemo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Store, actions } from '../../redux';
+import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
+import { useDispatch } from 'react-redux';
+import { actions } from '../../redux';
 import { useHistory } from 'react-router-dom';
 import Header from '../../components/Header';
 import Dropzone from '../../components/Dropzone';
@@ -15,9 +15,6 @@ import { displayValidationError } from '../../utils/errors';
 import '../styles/pages.css';
 
 const CreatePoint: React.FC = () => {
-    const { user } = useSelector((store: Store) => store.auth);
-    const logged = useMemo(() => user !== null, [user]);
-    const history = useHistory();
     const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         name: '',
@@ -34,12 +31,6 @@ const CreatePoint: React.FC = () => {
     const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [selectedFile, setSelectedFile] = useState<File>();
-
-    useEffect(() => {
-        if (!logged) {
-            history.push("/login?next=/point/new");
-        }
-    }, [logged, history]);
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition((position) => {
@@ -74,10 +65,6 @@ const CreatePoint: React.FC = () => {
             }
         });
     }, [selectedUf, dispatch]);
-
-    if (!logged) {
-        return <></>;
-    }
 
     function handleMapClick(event: LeafletMouseEvent) {
         setSelectedPosition([

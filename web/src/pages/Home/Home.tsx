@@ -4,6 +4,7 @@ import { FiLogIn } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
 // import local components/hooks
 import Modal, { useModal } from '../../components/Modal';
+import { useAuth } from '../../hooks';
 // import services
 //import { getUfs, getCities } from '../../services/ibge';
 // import assets
@@ -11,6 +12,7 @@ import logo from '../../assets/logo.svg';
 import './styles.css';
 
 const Home = () => {
+    const { logged } = useAuth();
     const [ufs, setUfs] = useState<string[]>([]);
     const [cities, setCities] = useState<string[]>([]);
     const [selectedUf, setSelectedUf] = useState('0');
@@ -54,10 +56,6 @@ const Home = () => {
         history.push(`/points/${selectedUf}/${selectedCity}`);
     }
 
-    function handleLogin() {
-        history.push('/signin');
-    }
-
     return (
         <>
             <div id="page-home">
@@ -70,14 +68,24 @@ const Home = () => {
                         <h1>Seu marketplace de coleta de resíduos.</h1>
                         <p>Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente.</p>
 
-                        <Link className="button" to="/point/new">
+                        <Link className="button" to={logged ? '/point/new' : '/login?next=/point/new'}>
                             <span>
                                 <FiLogIn />
                             </span>
                             <strong>Cadastre um ponto de coleta</strong>
                         </Link>
 
-                        <p>Ou <span className="fake-link" onClick={cityModal.open}>encontre um ponto próximo de você</span>. Você pode, também, <span className="fake-link" onClick={handleLogin}>entrar para alterar seus dados</span>.</p>
+                        <p>
+                            Ou <span className="fake-link" onClick={cityModal.open}>encontre um ponto próximo de você</span>. {logged ? (
+                                <>
+                                    Você pode, também, <Link to="/user">alterar seus dados</Link>.
+                                </>
+                            ) : (
+                                <>
+                                    Você pode, também, <Link to="/login">entrar para alterar seus dados</Link>.
+                                </>
+                            )}
+                        </p>
                     </main>
                 </div>
             </div>

@@ -8,6 +8,8 @@ import ItemSelector from '../../components/ItemSelector';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { LeafletMouseEvent } from 'leaflet';
 import { retrieveUFs, retrieveCities } from '../../services/ibge';
+import { CreatePointDataSchema } from './validation';
+import { displayValidationError } from '../../utils/errors';
 
 // TODO: remove this style and make it global
 import '../styles/pages.css';
@@ -89,10 +91,6 @@ const CreatePoint: React.FC = () => {
         setFormData({ ...formData, [name]: value });
     }
 
-    function handleSubmit(e: FormEvent) {
-        e.preventDefault();
-    }
-
     function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
         const uf = event.target.value;
         setSelectedUf(uf);
@@ -110,6 +108,57 @@ const CreatePoint: React.FC = () => {
         }
         setSelectedFile(file);
         return true;
+    }
+
+    async function handleSubmit(e: FormEvent) {
+        e.preventDefault();
+        dispatch(actions.global.pushLoading());
+
+        const { name, email, whatsapp } = formData;
+        const uf = selectedUf;
+        const city = selectedCity;
+        const [latitude, longitude] = selectedPosition;
+        const items = selectedItems;
+
+        if (!selectedFile) {
+            dispatch(actions.global.popLoading());
+            dispatch(actions.global.pushMessage('Você precisa enviar uma imagem do seu ponto de coleta.'));
+            return;
+        }
+        if (items.length === 0) {
+            dispatch(actions.global.popLoading());
+            dispatch(actions.global.pushMessage('Você precisa selecionar pelo menos um tipo de item que seu ponto de coleta recolhe.'));
+            return;
+        }
+        try {
+            const validationResult = await CreatePointDataSchema.validate({
+                name,
+                email,
+                whatsapp,
+                uf,
+                city,
+                latitude,
+                longitude,
+                items,
+            });
+
+            const data = new FormData();
+            data.append('name', name);
+            data.append('email', email);
+            data.append('whatsapp', whatsapp);
+            data.append('uf', uf);
+            data.append('city', city);
+            data.append('latitude', String(latitude));
+            data.append('longitude', String(longitude));
+            data.append('items', items.join(','));
+            data.append('image', selectedFile);
+
+            // TODO: dispatch here.
+        } catch(err) {
+            dispatch(actions.global.popLoading());
+            dispatch(actions.global.pushMessage(displayValidationError(err)));
+            return;
+        }
     }
 
     return (

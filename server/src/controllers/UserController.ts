@@ -43,6 +43,9 @@ export default class UserController {
         }
         const results = await pointsRepo.find({
             where: { user: request.user.id },
+            order: {
+                created_at: 'DESC',
+            },
             relations: ['items', 'items.item'],
             skip: (page - 1) * config.paginationItems,
             take: config.paginationItems,

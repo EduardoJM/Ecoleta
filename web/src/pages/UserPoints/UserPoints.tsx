@@ -5,8 +5,9 @@ import { actions, Store } from '../../redux';
 import Header from '../../components/Header';
 import PointsList from '../../components/PointsList';
 import Pagination from '../../components/Pagination';
-
-import '../styles/page-list-points.css';
+import UserHeader from '../../components/UserHeader';
+import { Page, TabContent } from '../../styles';
+import { useAuth } from '../../hooks';
 
 const UserPoints: React.FC = () => {
     const dispatch = useDispatch();
@@ -14,6 +15,7 @@ const UserPoints: React.FC = () => {
     const { page: pageString } = useParams<{
         page?: string;
     }>();
+    const { user } = useAuth();
 
     const page = useMemo(() => {
         if (!pageString) {
@@ -34,24 +36,23 @@ const UserPoints: React.FC = () => {
     }, [page, dispatch]);
 
     return (
-        <div className="page-list-points">
+        <Page className="active">
             <Header />
+            <UserHeader user={user} />
 
-            <div className="content">
-                <span>Mostrando seus pontos de coleta.</span>
-            </div>
+            <TabContent>
+                <PointsList points={points} />
 
-            <PointsList points={points} />
-
-            {pagesCount > 1 && (
-                <Pagination
-                    from={1}
-                    to={pagesCount}
-                    current={currentPage}
-                    linkPrefix="/user/points/"
-                />
-            )}
-        </div>
+                {pagesCount > 1 && (
+                    <Pagination
+                        from={1}
+                        to={pagesCount}
+                        current={currentPage}
+                        linkPrefix="/user/points/"
+                    />
+                )}
+            </TabContent>
+        </Page>
     );
 };
 

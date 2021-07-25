@@ -119,6 +119,23 @@ export default class PointsController {
         return response.json(point.serialize(request));
     }
 
+    static async delete(request: Request<PointShowParams, any, any>, response: Response) {
+        const pointRepo = getRepository(Point);
+        try {
+            const result = await pointRepo.delete({ id: parseInt(request.params.id, 10) });
+            if (result.affected) {
+                return response.send();
+            } else {
+                return response
+                    .status(httpStatusCode.HTTP_500_INTERNAL_SERVER_ERROR)
+                    .json(outputErrors.responses.UNKNOWN_DELETE_ERROR);
+            }
+        } catch(e) {
+            return response
+                .status(httpStatusCode.HTTP_500_INTERNAL_SERVER_ERROR)
+                .json(outputErrors.responses.UNKNOWN_DELETE_ERROR);
+        }
+    }
 
     /*
     async index(request: Request, response: Response) {

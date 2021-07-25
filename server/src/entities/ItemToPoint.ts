@@ -13,9 +13,9 @@ export default class ItemToPoint {
     @PrimaryGeneratedColumn()
     id!: number;
     
-    @ManyToOne((type) => Item, (item) => item.items)
+    @ManyToOne((type) => Item, (item) => item.items, { onDelete: 'CASCADE' })
     item!: Item;
 
-    @ManyToOne((type) => Point, (point) => point.items)
+    @ManyToOne((type) => Point, (point) => point.items, { onDelete: 'CASCADE' })
     point!: Point;
 }

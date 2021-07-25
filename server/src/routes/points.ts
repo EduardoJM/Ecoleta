@@ -12,9 +12,17 @@ router.post(
     validations.PointCreateDataValidation,
     controllers.points.create,
 );
+
 router.get(
     '/point/:id',
     controllers.points.show,
+);
+
+router.delete(
+    '/point/:id',
+    auth.IsUserAuthenticated,
+    auth.UserIsPointOwner,
+    controllers.points.delete,
 );
 
 export default router;

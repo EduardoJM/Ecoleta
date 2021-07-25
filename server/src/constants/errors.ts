@@ -14,6 +14,9 @@ export const errorCodes = {
     IMAGE_COMPRESSOR_ERROR: 'IMAGE_COMPRESSOR_ERROR',
     PAGE_NOT_FOUND: 'PAGE_NOT_FOUND',
     POINT_NOT_FOUND: 'POINT_NOT_FOUND',
+    AUTH_POINT_NO_ACCESS: 'AUTH_NO_ACCESS',
+    INVALID_POINT_ID: 'INVALID_POINT_ID',
+    UNKNOWN_DELETE_ERROR: 'UNKNOWN_DELETE_ERROR',
 };
 
 export const errorMessages = {
@@ -28,6 +31,9 @@ export const errorMessages = {
     USER_NOT_FOUND: 'Usuário não encontrado',
     PAGE_NOT_FOUND: 'Página não encontrada',
     POINT_NOT_FOUND: 'Ponto não encontrado',
+    AUTH_POINT_NO_ACCESS: 'Você não é o dono desse ponto, portanto não pode realizar essa operação',
+    INVALID_POINT_ID: 'O id do ponto passado é inválido',
+    UNKNOWN_DELETE_ERROR: 'Aconteceu um erro desconhecido ao tentar deletar',
 };
 
 export const responses = {
@@ -74,5 +80,17 @@ export const responses = {
     POINT_NOT_FOUND: {
         errorCodes: errorCodes.POINT_NOT_FOUND,
         error: errorMessages.POINT_NOT_FOUND,
+    },
+    AUTH_POINT_NO_ACCESS: {
+        errorCodes: errorCodes.AUTH_POINT_NO_ACCESS,
+        error: errorMessages.AUTH_POINT_NO_ACCESS,
+    },
+    INVALID_POINT_ID: {
+        errorCodes: errorCodes.INVALID_POINT_ID,
+        error: errorMessages.INVALID_POINT_ID,
+    },
+    UNKNOWN_DELETE_ERROR: {
+        errorCodes: errorCodes.UNKNOWN_DELETE_ERROR,
+        error: errorMessages.UNKNOWN_DELETE_ERROR,
     },
 };

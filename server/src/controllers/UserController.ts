@@ -60,7 +60,7 @@ export default class UserController {
     }
 
     static async create(request: Request<any, any, UserCreateRequestBody>, response: Response) {
-        const {email, password, avatar} = request.body;
+        const {email, password, avatar, name} = request.body;
 
         const userRepo = getRepository(User);
         const alreadyRegistered = await userRepo.findOne({
@@ -73,6 +73,7 @@ export default class UserController {
                 .json(outputErrors.responses.EMAIL_ALREADY_REGISTERED);
         }
         const user = new User();
+        user.name = name;
         user.email = email;
         user.avatar = avatar;
         user.password = password;
@@ -86,6 +87,45 @@ export default class UserController {
                 .json({
                     user: result.serialize(request),
                     token,
+                });
+        } catch (e) {
+            return response
+                .status(httpStatusCode.HTTP_500_INTERNAL_SERVER_ERROR)
+                .json(outputErrors.responses.UNKNOWN_SAVE_ERROR);
+        }
+    }
+
+    static async update(request: Request<any, any, Partial<UserCreateRequestBody>>, response: Response) {
+        if (!request.user) {
+            return response
+                .status(httpStatusCode.HTTP_404_NOT_FOUND)
+                .json(outputErrors.responses.USER_NOT_FOUND);
+        }
+        const userRepo = getRepository(User);
+        const user = await userRepo.findOne({ where: { id: request.user.id } });
+        if (!user) {
+            return response
+                .status(httpStatusCode.HTTP_404_NOT_FOUND)
+                .json(outputErrors.responses.USER_NOT_FOUND);
+        }
+        if (request.body.avatar !== undefined) {
+            user.avatar = request.body.avatar;
+        }
+        if (request.body.email !== undefined) {
+            user.email = request.body.email;
+        }
+        if (request.body.password !== undefined) {
+            user.password = request.body.password;
+            user.hashPassword();
+        }
+        if (request.body.name !== undefined) {
+            user.name = request.body.name;
+        }
+        try {
+            const result = await userRepo.save(user);
+            return response
+                .json({
+                    user: result.serialize(request),
                 });
         } catch (e) {
             return response

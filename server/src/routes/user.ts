@@ -24,4 +24,13 @@ router.get(
     controllers.user.points,
 );
 
+router.put(
+    '/user',
+    auth.IsUserAuthenticated,
+    uploader.UserUpdateAvatarUpload,
+    uploader.UserCreateAvatarCompressor,
+    validations.UserUpdateDataValidation,
+    controllers.user.update,
+)
+
 export default router;

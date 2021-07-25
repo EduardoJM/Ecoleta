@@ -13,6 +13,7 @@ import { buildUrl } from '../utils/urls';
 
 export interface SerializedUser {
     id: number;
+    name: string;
     email: string;
     avatar: string;
     created_at: string;
@@ -23,6 +24,9 @@ export interface SerializedUser {
 export default class User {
     @PrimaryGeneratedColumn()
     id!: number;
+
+    @Column()
+    name!: string;
         
     @Column()
     email!: string;
@@ -53,6 +57,7 @@ export default class User {
     serialize(request: Request): SerializedUser  {
         return {
             id: this.id,
+            name: this.name,
             email: this.email,
             avatar: buildUrl(request, `static/avatars/${this.avatar}`),
             created_at: String(this.created_at),

@@ -7,6 +7,7 @@ import { generateToken } from '../utils/jwt';
 import config from '../config';
 
 interface UserCreateRequestBody {
+    name: string;
     email: string;
     password: string;
     avatar: string;

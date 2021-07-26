@@ -1,13 +1,16 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
-import { Home, Login } from '../pages';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { Home, Login, NotFound } from '../pages';
 
 const AnonStack: React.FC = () => {
     return (
-        <>
-            <Route component={Home} path="/" exact />
-            <Route component={Login} path="/login" exact />
-        </>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/login" component={Login} />
+                <Route component={NotFound} />
+            </Switch>
+        </BrowserRouter>
     );
 };
 

@@ -4,3 +4,4 @@ export { default as Logout } from './Logout';
 export { default as User } from './User';
 export { default as UserPoints } from './UserPoints';
 export { default as Home } from './Home';
+export { default as NotFound } from './NotFound';

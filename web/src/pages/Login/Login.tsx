@@ -25,7 +25,7 @@ const Login: React.FC = () => {
                 history,
             }));
         } else {
-            dispatch(actions.auth.requestLogin(email, password));
+            dispatch(actions.auth.requestLogin(email, password, { history }));
         }
     };
 

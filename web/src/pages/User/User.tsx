@@ -16,7 +16,7 @@ const User: React.FC = () => {
             <UserHeader user={user} />
 
             <TabContent>
-                <h2>Nome Aqui</h2>
+                <h2>{user.name}</h2>
                 <span>{user.email}</span>
             </TabContent>
         </Page>

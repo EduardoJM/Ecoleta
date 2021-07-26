@@ -10,8 +10,8 @@ export interface AuthActionTypePayloadMap {
     'AuthRequestLogin': {
         email: string;
         password: string;
-        route?: {
-            next: string;
+        route: {
+            next?: string;
             history: History;
         }
     };
@@ -48,8 +48,8 @@ export function setUserData(user: UserData): AuthAction<'AuthSetUserData'> {
 export function requestLogin(
     email: string,
     password: string,
-    route?: {
-        next: string;
+    route: {
+        next?: string;
         history: History;
     }
 ): AuthAction<'AuthRequestLogin'> {

@@ -29,7 +29,7 @@ const UserHeader: React.FC<UserHeaderProps> = (props) => {
                     }}
                 />
                 <Information>
-                    <h2>Nome vem Aqui</h2>
+                    <h2>{user.name}</h2>
                     <span>{user.email}</span>
                 </Information>
             </UserContainer>

@@ -1,6 +1,6 @@
 import { all, takeLatest, call, put } from 'redux-saga/effects';
 import { actions, UserAction } from '../actions';
-import { PointList } from '../../types';
+import { PointList, UserData } from '../../types';
 import { api } from '../../services';
 import { displayAPIError } from '../../utils/errors';
 
@@ -44,6 +44,22 @@ function* deletePoint(action: UserAction<'UserRequestDeletePoint'>) {
     }
 }
 
+function* updateUser(action: UserAction<'UserRequestUpdate'>) {
+    const data = action.payload;
+    yield put(actions.global.pushLoading());
+    try {
+        const response : {
+            user: UserData
+        } = yield call(api.user.updateUser, data);
+        yield put(actions.auth.setUserData(response.user));
+        yield put(actions.global.pushMessage('Dados atualizados com sucesso!'));
+    } catch (err) {
+        yield put(actions.global.pushMessage(displayAPIError(err)));
+    } finally {
+        yield put(actions.global.popLoading());
+    }
+}
+
 function* watchLoadPointsPage() {
     yield takeLatest<UserAction<'UserRequestPoints'>>('UserRequestPoints', loadPointsPage);
 }
@@ -56,11 +72,16 @@ function* watchDeletePoint() {
     yield takeLatest<UserAction<'UserRequestDeletePoint'>>('UserRequestDeletePoint', deletePoint);
 }
 
+function* watchUpdateUser() {
+    yield takeLatest<UserAction<'UserRequestUpdate'>>('UserRequestUpdate', updateUser);
+}
+
 export default function* userSagas() {
     yield all([
         watchLoadPointsPage(),
         watchAddPoint(),
         watchDeletePoint(),
+        watchUpdateUser(),
     ]);
 }
 

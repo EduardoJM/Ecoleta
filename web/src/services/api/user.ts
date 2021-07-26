@@ -7,6 +7,12 @@ export async function createUser(data: FormData) {
         .then((response) => response.data);
 }
 
+export async function updateUser(data: FormData) {
+    return api
+        .put('/user', data)
+        .then((response) => response.data);
+}
+
 export async function loginUser(email: string, password: string) : Promise<UserAuthenticatedData> {
     return api
         .post<UserAuthenticatedData>('/auth', { email, password })

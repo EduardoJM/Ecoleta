@@ -17,6 +17,7 @@ export interface UserActionTypePayloadMap {
     'UserRemovePoint': {
         id: number;
     },
+    'UserRequestUpdate': FormData,
 }
 
 export interface UserAction<K extends keyof UserActionTypePayloadMap> extends Action<K> {
@@ -30,7 +31,8 @@ export type UserActionCollection =
     UserAction<'UserRequestPoints'> |
     UserAction<'UserRequestCreatePoint'> |
     UserAction<'UserRemovePoint'> |
-    UserAction<'UserRequestDeletePoint'>;
+    UserAction<'UserRequestDeletePoint'> |
+    UserAction<'UserRequestUpdate'>;
 
 export function setPointsData(pointsData: PointList): UserAction<'UserSetPointsData'> {
     return { type: 'UserSetPointsData', payload: pointsData };
@@ -50,4 +52,8 @@ export function removePoint(id: number) : UserAction<'UserRemovePoint'> {
 
 export function requestDeletePoint(id: number) : UserAction<'UserRequestDeletePoint'> {
     return { type: 'UserRequestDeletePoint', payload: { id } };
+}
+
+export function requestUpdateUser(data: FormData) : UserAction<'UserRequestUpdate'> {
+    return { type: 'UserRequestUpdate', payload: data };
 }

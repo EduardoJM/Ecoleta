@@ -41,7 +41,7 @@ const UserPoints: React.FC = () => {
             <UserHeader user={user} />
 
             <TabContent>
-                <PointsList points={points} />
+                <PointsList variant="owner" points={points} />
 
                 {pagesCount > 1 && (
                     <Pagination

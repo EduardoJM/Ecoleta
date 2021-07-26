@@ -31,6 +31,19 @@ function* addPoint(action: UserAction<'UserRequestCreatePoint'>) {
     }
 }
 
+function* deletePoint(action: UserAction<'UserRequestDeletePoint'>) {
+    const { id } = action.payload;
+    yield put(actions.global.pushLoading());
+    try {
+        yield call(api.point.deletePoint, id);
+        yield put(actions.user.removePoint(id));
+    } catch (err) {
+        yield put(actions.global.pushMessage(displayAPIError(err)));
+    } finally {
+        yield put(actions.global.popLoading());
+    }
+}
+
 function* watchLoadPointsPage() {
     yield takeLatest<UserAction<'UserRequestPoints'>>('UserRequestPoints', loadPointsPage);
 }
@@ -39,10 +52,15 @@ function* watchAddPoint() {
     yield takeLatest<UserAction<'UserRequestCreatePoint'>>('UserRequestCreatePoint', addPoint);
 }
 
+function* watchDeletePoint() {
+    yield takeLatest<UserAction<'UserRequestDeletePoint'>>('UserRequestDeletePoint', deletePoint);
+}
+
 export default function* userSagas() {
     yield all([
         watchLoadPointsPage(),
         watchAddPoint(),
+        watchDeletePoint(),
     ]);
 }
 

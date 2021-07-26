@@ -29,6 +29,47 @@ export const PointItem = styled.div`
         cursor: pointer;
     }
 
+    .actions {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+
+        .button {
+            border: none;
+            outline: none;
+
+            flex: 0 0 calc(50% - 20px);
+            height: 50px;
+            border-radius: 8px;
+            text-decoration: none;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+
+            &.delete {
+                background: var(--delete-color);
+                color: #FFF;
+
+                &:hover {
+                    background: var(--delete-color-hover);
+                }
+            }
+
+            svg {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
     .contact {
         display: flex;
         flex-direction: row;

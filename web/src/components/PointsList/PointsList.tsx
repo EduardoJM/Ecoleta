@@ -7,10 +7,11 @@ import Modal from '../Modal';
 
 interface PointsListProps {
     points: Point[];
+    variant?: 'any' | 'owner';
 }
 
 const PointsList: React.FC<PointsListProps> = (props) => {
-    const { points } = props;
+    const { points, variant = 'any' } = props;
 
     const [viewingOnMap, setViewingOnMap] = useState<Point | null>(null);
 
@@ -26,7 +27,7 @@ const PointsList: React.FC<PointsListProps> = (props) => {
         return (
             <PointsNotFound>
                 <h2>Ops!</h2>
-                <span>Ainda não tempos pontos de coleta cadastrados nessa cidade!</span>
+                <span>Não temos pontos cadastrados nessa página!</span>
             </PointsNotFound>
         )
     }
@@ -35,7 +36,12 @@ const PointsList: React.FC<PointsListProps> = (props) => {
         <>
             <PointsGrid>
                 {points.map((point) => (
-                    <PointItem key={point.id} point={point} onViewMap={handleViewMap} />
+                    <PointItem
+                        key={point.id}
+                        point={point}
+                        onViewMap={handleViewMap}
+                        variant={variant}
+                    />
                 ))}
             </PointsGrid>
             <Modal

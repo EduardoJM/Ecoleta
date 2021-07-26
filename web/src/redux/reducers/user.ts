@@ -12,6 +12,11 @@ export default function userReducer(
             page: action.payload.page,
             pagesCount: action.payload.pagesCount,
         };
+    } else if (action.type === 'UserRemovePoint') {
+        return {
+            ...state,
+            points: state.points.filter((item) => item.id !== action.payload.id),
+        }
     }
     return state;
 }

@@ -2,6 +2,8 @@
     --primary-color: #34CB79;
     --title-color: #322153;
     --text-color: #6C6C80;
+    --delete-color: #ff1919;
+    --delete-color-hover: #ff5e5e;
 }
 
 * {

@@ -42,6 +42,20 @@ function* checkIfLogged() {
     }
 }
 
+function* logout(action: AuthAction<'AuthRequestLogout'>) {
+    yield put(actions.global.pushLoading());
+    try {
+        api.axios.defaults.headers.Authorization = undefined;
+        localStorage.removeItem('@Ecoleta_authorization_token');
+        yield put (actions.auth.removeUserData());
+        action.payload.push('/');
+    } catch(err) {
+        yield put(actions.global.pushMessage(displayAPIError(err)));
+    } finally {
+        yield put(actions.global.popLoading());
+    }
+}
+
 function* watchLogin() {
     yield takeLatest<AuthAction<'AuthRequestLogin'>>('AuthRequestLogin', login);
 };
@@ -50,9 +64,14 @@ function* watchCheckIfLogged() {
     yield takeLatest<AuthAction<'AuthRequestCheckIfLogged'>>('AuthRequestCheckIfLogged', checkIfLogged);
 }
 
+function* watchLogout() {
+    yield takeLatest<AuthAction<'AuthRequestLogout'>>('AuthRequestLogout', logout);
+};
+
 export default function* authSagas() {
     yield all([
         watchLogin(),
         watchCheckIfLogged(),
+        watchLogout(),
     ]);
 }

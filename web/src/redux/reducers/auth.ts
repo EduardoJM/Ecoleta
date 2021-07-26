@@ -10,6 +10,11 @@ export default function authReducer(
             ...state,
             user: action.payload,
         };
+    } else if (action.type === 'AuthRemoveUserData') {
+        return {
+            ...state,
+            user: null,
+        };
     }
     return state;
 }

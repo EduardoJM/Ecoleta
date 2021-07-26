@@ -16,7 +16,8 @@ export interface AuthActionTypePayloadMap {
         }
     };
     'AuthRequestCheckIfLogged': null;
-    'AuthRequestLogout': null;
+    'AuthRequestLogout': History;
+    'AuthRemoveUserData': null;
 }
 
 export interface AuthAction<K extends keyof AuthActionTypePayloadMap> extends Action<K> {
@@ -29,7 +30,8 @@ export type AuthActionCollection =
     AuthAction<'AuthSetUserData'> |
     AuthAction<'AuthRequestLogin'> |
     AuthAction<'AuthRequestLogout'> |
-    AuthAction<'AuthRequestCheckIfLogged'>;
+    AuthAction<'AuthRequestCheckIfLogged'> |
+    AuthAction<'AuthRemoveUserData'>;
 
 export function requestCheckIfLogged(): AuthAction<'AuthRequestCheckIfLogged'> {
     return {
@@ -57,4 +59,12 @@ export function requestLogin(
         type: 'AuthRequestLogin',
         payload: { email, password, route },
     };
+}
+
+export function requestLogout(history: History): AuthAction<'AuthRequestLogout'> {
+    return { type: 'AuthRequestLogout', payload: history };
+}
+
+export function removeUserData(): AuthAction<'AuthRemoveUserData'> {
+    return { type: 'AuthRemoveUserData', payload: null };
 }

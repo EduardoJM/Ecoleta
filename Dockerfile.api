@@ -1,0 +1,9 @@
+FROM node:16
+
+WORKDIR /app
+ADD ./package.json /app/package.json
+ADD ./packages/api/package.json /app/packages/api/package.json
+ADD ./yarn.lock /app/yarn.lock
+RUN yarn install
+ADD ./packages/api /app/packages/api
+#RUN yarn workspace @ecoleta/api build
